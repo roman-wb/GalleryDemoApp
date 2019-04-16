@@ -10,36 +10,39 @@ import UIKit
 import SwiftyVK
 
 protocol AlbumsVMProtocol: class {
-    var countOfAlbums: Int { get }
+
+    var inProgress: Bool { get }
+
+    var isFinished: Bool { get }
+
+    var count: Int { get }
 
     func logout()
-    
-    func fetch(refresh: Bool)
-    
-    func album(at: Int) -> Album
+
+    func album(at: Int) -> Album?
+
+    func fetch(isRefresh: Bool)
+
+    func prefetch(by indexPath: IndexPath)
 }
 
 class AlbumsVM {
-    
+
     private weak var viewController: AlbumsVCProtocol!
 
-    private var albums = [Album]()
+    private(set) var inProgress = false
 
-    private var inProgress = false
-
-    private var isFinished = false
+    private(set) var isFinished = false
 
     private var currentPage = 1
 
-    private var countOfPage = 20
-
-    private var offsetPage: Int {
-        return (currentPage - 1) * countOfPage
-    }
+    private var itemsOnPage = 20
 
     private var parameters: Parameters {
-        return [.needCovers: "1", .photoSizes: "1", .count: String(countOfPage),
-                .offset: String(offsetPage), .ownerId: "-41238925"]
+        let offset = (currentPage - 1) * itemsOnPage
+
+        return [.needCovers: "1", .photoSizes: "1", .count: String(itemsOnPage),
+                .offset: String(offset), .ownerId: "-41238925"]
     }
 
     init(viewController: AlbumsVCProtocol) {
@@ -48,70 +51,75 @@ class AlbumsVM {
 }
 
 extension AlbumsVM: AlbumsVMProtocol {
-    var countOfAlbums: Int {
-        return albums.count
+
+    var count: Int {
+        return Album.count()
     }
-    
+
     func logout() {
         VK.sessions.default.logOut()
         RouterVC.shared.toLogin()
     }
-    
-    func fetch(refresh: Bool = false) {
-        if refresh {
-            isFinished = false
-            currentPage = 1
-        }
 
+    func album(at index: Int) -> Album? {
+        return Album.first(offset: index)
+    }
+
+    func fetch(isRefresh: Bool = false) {
         if inProgress || isFinished { return }
 
         inProgress = true
 
+        if isRefresh {
+            isFinished = false
+            currentPage = 1
+
+            viewController.refreshing()
+        } else {
+            viewController.fetching()
+        }
+
         VK.API.Photos.getAlbums(parameters)
-            .onSuccess { [weak self] in
-                guard let self = self else { return }
-
-                self.inProgress = false
-
-                if let response = try? JSONDecoder().decode(Album.Response.self, from: $0) {
-                    self.isFinished = response.items.count == 0
-
-                    if refresh {
-                        self.albums = response.items
-                    } else {
-                        self.albums.append(contentsOf: response.items)
-                    }
-
-                    self.currentPage += 1
-                
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        
-                        self.viewController.fetchCompleted()
-                    }
-                } else {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-
-                        self.viewController.fetchFailed(with: "Unknown API response")
-                    }
-                }
-            }
-            .onError { [weak self] error in
-                guard let self = self else { return }
-
-                self.inProgress = false
-
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-
-                    self.viewController.fetchFailed(with: "No internet connection")
-                }
-            }
+            .onSuccess(onSuccess)
+            .onError(onError)
             .send()
     }
-    
-    func album(at index: Int) -> Album {
-        return albums[index]
+
+    func prefetch(by indexPath: IndexPath) {
+        guard indexPath.row >= count - 6 else {
+            return
+        }
+        fetch(isRefresh: false)
+    }
+
+    private func onSuccess(_ data: Data) {
+        if let response = try? JSONDecoder().decode(ApiResponse.self, from: data) {
+            isFinished = response.count == 0
+
+            for item in response.items {
+                Album.create(id: item.id,
+                             title: item.title,
+                             thumb: item.thumb)
+            }
+
+            currentPage += 1
+
+            DispatchQueue.main.async { [weak self] in
+                self?.inProgress = false
+                self?.viewController.fetchCompleted()
+            }
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.inProgress = false
+                self?.viewController.fetchFailed(with: "Unknown API response")
+            }
+        }
+    }
+
+    private func onError(error: VKError) {
+        DispatchQueue.main.async { [weak self] in
+            self?.inProgress = false
+            self?.viewController.fetchFailed(with: "Not connection")
+        }
     }
 }

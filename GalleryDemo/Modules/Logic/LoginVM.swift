@@ -10,32 +10,34 @@ import UIKit
 import SwiftyVK
 
 protocol LoginVMProtocol: class {
+
     func login()
 }
 
 final class LoginVM {
-    
+
     private weak var viewController: LoginVCProtocol!
-    
+
     init(viewController: LoginVCProtocol) {
         self.viewController = viewController
     }
 }
 
 extension LoginVM: LoginVMProtocol {
+
     func login() {
-        VK.sessions.default.logIn(onSuccess: { info in
-            DispatchQueue.main.async {
-                RouterVC.shared.toMain()
-            }
-        }, onError: { [weak self] error in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                
-                self.viewController.showAlert("Authorize failed with \(error.localizedDescription)")
-            }
-        })
+        VK.sessions.default.logIn(onSuccess: onSuccess, onError: onError)
+    }
+
+    private func onSuccess(data: [String: String]) {
+        DispatchQueue.main.async {
+            RouterVC.shared.toMain()
+        }
+    }
+
+    private func onError(error: VKError) {
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController.showAlert("Authorize failed with \(error.localizedDescription)")
+        }
     }
 }
