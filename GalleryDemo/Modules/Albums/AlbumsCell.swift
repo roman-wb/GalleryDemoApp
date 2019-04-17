@@ -16,74 +16,63 @@ final class AlbumsCell: UITableViewCell {
     @IBOutlet private var thumbImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
 
-    private var url: URL!
+    private var thumbURL: URL!
 
     private var imageLoader: ImageLoader!
 
-    func configure(_ viewModel: AlbumsVMProtocol, with indexPath: IndexPath) {
-        guard let album = viewModel.album(at: indexPath.row) else {
+    func configure(_ album: AlbumsResponse.Album) {
+        thumbURL = album.thumbURL
+        titleLabel.text = album.title
+
+        if thumbURL == nil {
             return
         }
 
-        titleLabel.text = album.title
-
-        guard
-            let urlString = album.thumb,
-            let url = URL(string: urlString) else {
-                return
-        }
-
-        self.url = url
-
-        imageLoader = ImageLoader(url: url, delegate: self)
-        imageLoader.fetch()
+        imageLoader = ImageLoader(url: thumbURL, delegate: self)
+        imageLoader.download()
     }
 
     func cancel() {
-        guard let imageLoader = imageLoader else {
-            return
-        }
-
         imageLoader.cancel()
     }
 }
 
 extension AlbumsCell: ImageLoaderDelegate {
 
-    func imageLoaderWillFetch(imageLoader: ImageLoader, url: URL) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self, self.checkURL(url) else {
-                return
-            }
+    func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
+        guard self.thumbURL == url else {
+            return
+        }
 
-            self.thumbImageView.image = nil
-            self.activityIndicatorView.startAnimating()
+        DispatchQueue.main.async { [weak self] in
+            self?.thumbImageView.alpha = 0
+            self?.thumbImageView.image = nil
+            self?.activityIndicatorView.startAnimating()
         }
     }
 
-    func imageLoaderDidFetch(imageLoader: ImageLoader, url: URL, image: UIImage) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self, self.checkURL(url) else {
-                return
-            }
+    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage) {
+        guard self.thumbURL == url else {
+            return
+        }
 
-            self.thumbImageView.image = image
-            self.activityIndicatorView.stopAnimating()
+        DispatchQueue.main.async { [weak self] in
+            self?.thumbImageView.image = image
+            self?.thumbImageView.alpha = 0
+
+            UIView.animate(withDuration: 0.25) {
+                self?.thumbImageView.alpha = 1
+            }
+            
+            self?.activityIndicatorView.stopAnimating()
         }
     }
 
-    func imageLoaderDidFetchWithError(imageLoader: ImageLoader, url: URL, error: Error?) {
-//        DispatchQueue.main.async { [weak self] in
-//            guard let self = self, self.checkURL(url) else {
-//                return
-//            }
-//
-//            self.thumbImageView.image = nil
-//            self.activityIndicatorView.stopAnimating()
-//        }
-    }
+    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL) {
+        guard self.thumbURL == url else {
+            return
+        }
 
-    private func checkURL(_ url: URL) -> Bool {
-        return self.url == url
+        //
     }
 }

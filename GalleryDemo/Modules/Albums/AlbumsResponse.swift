@@ -8,28 +8,34 @@
 
 import Foundation
 
-extension AlbumsVM {
+struct AlbumsResponse: Codable {
+    var count: Int
+    var items: [Album]
 
-    struct AlbumsResponse: Codable {
-        var count: Int
-        var items: [Album]
+    struct Size: Codable {
+        var src: String
+        var width: Int
+        var height: Int
+        var type: String
+    }
 
-        // swiftlint:disable nesting
-        struct Size: Codable {
-            var src: String
-            var width: Int
-            var height: Int
-            var type: String
-        }
+    struct Album: Codable {
+        var id: Int
+        var title: String
+        var sizes: [Size]
 
-        struct Album: Codable {
-            var id: Int
-            var title: String
-            var sizes: [Size]
-            var thumb: String? {
-                return sizes.last?.src
+        var thumb: String {
+            var size = sizes.last!
+            for tmpSize in sizes {
+                if tmpSize.width > 800 && tmpSize.width < size.width {
+                    size = tmpSize
+                }
             }
+            return size.src
         }
-        // swiftlint:enable nesting
+
+        var thumbURL: URL? {
+            return URL(string: thumb)
+        }
     }
 }

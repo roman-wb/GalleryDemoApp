@@ -10,10 +10,6 @@ import UIKit
 
 protocol AlbumsVCProtocol: class {
 
-    func refreshing()
-
-    func fetching()
-
     func fetchCompleted()
 
     func fetchFailed(with: String)
@@ -22,8 +18,6 @@ protocol AlbumsVCProtocol: class {
 final class AlbumsVC: UIViewController {
 
     @IBOutlet private var tableView: UITableView!
-    @IBOutlet private var headerView: UIView!
-    @IBOutlet private var footerView: UIView!
 
     private var refreshControl: UIRefreshControl!
 
@@ -36,13 +30,8 @@ final class AlbumsVC: UIViewController {
 
         configureLogoutButton()
         configureRefreshControl()
-        configureTableView()
 
         viewModel.fetch(isRefresh: false)
-
-        let photosVC = PhotosVC.storyboardInstance()
-        photosVC.album = Album.first(offset: 0)
-        navigationController?.pushViewController(photosVC, animated: true)
     }
 
     func configureLogoutButton() {
@@ -56,11 +45,6 @@ final class AlbumsVC: UIViewController {
     func configureRefreshControl() {
         refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
-    }
-
-    func configureTableView() {
-        tableView.tableHeaderView = nil
-        tableView.tableFooterView = nil
     }
 
     @objc func tapLogoutButton(_ sender: Any) {
@@ -77,32 +61,12 @@ final class AlbumsVC: UIViewController {
 
 extension AlbumsVC: AlbumsVCProtocol {
 
-    func refreshing() {
-        tableView.tableHeaderView = nil
-        tableView.tableFooterView = nil
-    }
-
-    func fetching() {
-        tableView.tableHeaderView = nil
-        tableView.tableFooterView = footerView
-    }
-
     func fetchCompleted() {
         tableView.reloadData()
-        finished()
     }
 
     func fetchFailed(with error: String) {
-        NotifyManager.shared.failure(error)
-        finished()
-    }
 
-    private func finished() {
-        if viewModel.count == 0 {
-            tableView.tableHeaderView = headerView
-        }
-        tableView.tableFooterView = nil
-        refreshControl.endRefreshing()
     }
 }
 
@@ -116,13 +80,7 @@ extension AlbumsVC: UITableViewDelegate {
             cell.cancel()
         }
 
-        viewModel.prefetch(by: indexPath)
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let photosVC = PhotosVC.storyboardInstance()
-        photosVC.album = Album.first(offset: indexPath.row)
-        navigationController?.pushViewController(photosVC, animated: true)
+        viewModel.prefetchIfNeeded(by: indexPath)
     }
 }
 
@@ -135,7 +93,8 @@ extension AlbumsVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AlbumsCell.identifier, for: indexPath)
         if let cell = cell as? AlbumsCell {
-            cell.configure(viewModel, with: indexPath)
+            let album = viewModel.album(at: indexPath.row)
+            cell.configure(album)
         }
         return cell
     }

@@ -19,30 +19,34 @@ protocol AlbumsVMProtocol: class {
 
     func logout()
 
-    func album(at: Int) -> Album?
+    func album(at: Int) -> AlbumsResponse.Album
 
     func fetch(isRefresh: Bool)
 
-    func prefetch(by indexPath: IndexPath)
+    func prefetchIfNeeded(by indexPath: IndexPath)
 }
 
 class AlbumsVM {
 
     private weak var viewController: AlbumsVCProtocol!
 
+    private var albums = [AlbumsResponse.Album]()
+
     private(set) var inProgress = false
 
     private(set) var isFinished = false
 
+    private let perPage = 20
+
     private var currentPage = 1
 
-    private var itemsOnPage = 20
-
     private var parameters: Parameters {
-        let offset = (currentPage - 1) * itemsOnPage
-
-        return [.needCovers: "1", .photoSizes: "1", .count: String(itemsOnPage),
-                .offset: String(offset), .ownerId: "-41238925"]
+        let offset = (currentPage - 1) * perPage
+        return [.needCovers: "1",
+                .photoSizes: "1",
+                .count: String(perPage),
+                .offset: String(offset),
+                .ownerId: "-41238925"]
     }
 
     init(viewController: AlbumsVCProtocol) {
@@ -53,7 +57,7 @@ class AlbumsVM {
 extension AlbumsVM: AlbumsVMProtocol {
 
     var count: Int {
-        return Album.count()
+        return albums.count
     }
 
     func logout() {
@@ -61,8 +65,8 @@ extension AlbumsVM: AlbumsVMProtocol {
         RouterVC.shared.toLogin()
     }
 
-    func album(at index: Int) -> Album? {
-        return Album.first(offset: index)
+    func album(at index: Int) -> AlbumsResponse.Album {
+        return albums[index]
     }
 
     func fetch(isRefresh: Bool = false) {
@@ -73,10 +77,6 @@ extension AlbumsVM: AlbumsVMProtocol {
         if isRefresh {
             isFinished = false
             currentPage = 1
-
-            viewController.refreshing()
-        } else {
-            viewController.fetching()
         }
 
         VK.API.Photos.getAlbums(parameters)
@@ -85,8 +85,9 @@ extension AlbumsVM: AlbumsVMProtocol {
             .send()
     }
 
-    func prefetch(by indexPath: IndexPath) {
-        guard indexPath.row >= count - 6 else {
+    func prefetchIfNeeded(by indexPath: IndexPath) {
+        let pointer = count - perPage / 2
+        guard indexPath.row >= pointer else {
             return
         }
         fetch(isRefresh: false)
@@ -96,10 +97,8 @@ extension AlbumsVM: AlbumsVMProtocol {
         if let response = try? JSONDecoder().decode(AlbumsResponse.self, from: data) {
             isFinished = response.count == 0
 
-            for item in response.items {
-                Album.create(id: item.id,
-                             title: item.title,
-                             thumb: item.thumb)
+            for album in response.items {
+                albums.append(album)
             }
 
             currentPage += 1

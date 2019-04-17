@@ -49,10 +49,6 @@ final class RouterVC: UIViewController {
     func toMain() {
         let viewController = AlbumsVC.storyboardInstance()
         let navigationViewController = UINavigationController(rootViewController: viewController)
-
-//        let photosVC = PhotosVC.storyboardInstance()
-//        navigationViewController.pushViewController(photosVC, animated: false)
-
         to(navigationViewController)
     }
 }

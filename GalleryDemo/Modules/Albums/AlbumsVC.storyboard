@@ -21,40 +21,9 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="200" estimatedRowHeight="200" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CqV-sg-mb1">
                                 <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="2Vq-Ih-yYu">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Albums is not available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q6g-M3-MpD">
-                                            <rect key="frame" x="120" y="14.5" width="174.5" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstItem="Q6g-M3-MpD" firstAttribute="centerY" secondItem="2Vq-Ih-yYu" secondAttribute="centerY" id="8qa-SO-TJn"/>
-                                        <constraint firstItem="Q6g-M3-MpD" firstAttribute="centerX" secondItem="2Vq-Ih-yYu" secondAttribute="centerX" id="q2k-Uv-bx3"/>
-                                    </constraints>
-                                </view>
-                                <view key="tableFooterView" contentMode="scaleToFill" id="xm6-2h-hHw">
-                                    <rect key="frame" x="0.0" y="278" width="414" height="50"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="93F-Lb-fiO">
-                                            <rect key="frame" x="197" y="15" width="20" height="20"/>
-                                        </activityIndicatorView>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstItem="93F-Lb-fiO" firstAttribute="centerY" secondItem="xm6-2h-hHw" secondAttribute="centerY" id="aNx-Y0-XK1"/>
-                                        <constraint firstItem="93F-Lb-fiO" firstAttribute="centerX" secondItem="xm6-2h-hHw" secondAttribute="centerX" id="htc-F2-3hH"/>
-                                    </constraints>
-                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="AlbumsCell" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AlbumsCell" rowHeight="200" id="dhI-5U-oGh" customClass="AlbumsCell" customModule="GalleryDemo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="78" width="414" height="200"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dhI-5U-oGh" id="0xQ-Dg-4R5">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
@@ -117,8 +86,6 @@
                         <viewLayoutGuide key="safeArea" id="mj6-Ma-lay"/>
                     </view>
                     <connections>
-                        <outlet property="footerView" destination="xm6-2h-hHw" id="V7Q-kq-2ef"/>
-                        <outlet property="headerView" destination="2Vq-Ih-yYu" id="XyY-Qu-w83"/>
                         <outlet property="tableView" destination="CqV-sg-mb1" id="8t2-b0-w3b"/>
                     </connections>
                 </viewController>
