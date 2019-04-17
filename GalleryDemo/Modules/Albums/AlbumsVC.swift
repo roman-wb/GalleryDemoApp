@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreData
 
 protocol AlbumsVCProtocol: class {
 
@@ -40,6 +39,10 @@ final class AlbumsVC: UIViewController {
         configureTableView()
 
         viewModel.fetch(isRefresh: false)
+
+        let photosVC = PhotosVC.storyboardInstance()
+        photosVC.album = Album.first(offset: 0)
+        navigationController?.pushViewController(photosVC, animated: true)
     }
 
     func configureLogoutButton() {
@@ -114,6 +117,12 @@ extension AlbumsVC: UITableViewDelegate {
         }
 
         viewModel.prefetch(by: indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let photosVC = PhotosVC.storyboardInstance()
+        photosVC.album = Album.first(offset: indexPath.row)
+        navigationController?.pushViewController(photosVC, animated: true)
     }
 }
 

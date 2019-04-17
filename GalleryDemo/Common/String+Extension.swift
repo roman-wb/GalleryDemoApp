@@ -10,6 +10,7 @@ import Foundation
 import CommonCrypto
 
 extension String {
+
     var md5: String {
         let data = Data(utf8)
         let hash = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in

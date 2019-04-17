@@ -87,3 +87,9 @@ class Album: NSManagedObject {
         }
     }
 }
+
+extension Album {
+
+    @objc(addPhotosObject:)
+    @NSManaged public func addToPhotos(_ value: Photo)
+}

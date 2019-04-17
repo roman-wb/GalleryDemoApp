@@ -12,13 +12,14 @@ class CoreDataManager {
 
     static let shared = CoreDataManager()
 
-    lazy var persistentContainer: PersistentContainer = {
-        let container = PersistentContainer(name: "Gallery")
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "Gallery")
         container.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
             }
         }
+
         return container
     }()
 

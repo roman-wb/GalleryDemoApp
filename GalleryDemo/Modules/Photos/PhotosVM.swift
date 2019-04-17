@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyVK
 
-protocol AlbumsVMProtocol: class {
+protocol PhotosVMProtocol: class {
 
     var inProgress: Bool { get }
 
@@ -17,18 +17,18 @@ protocol AlbumsVMProtocol: class {
 
     var count: Int { get }
 
-    func logout()
-
-    func album(at: Int) -> Album?
+    func photo(at: Int) -> Photo?
 
     func fetch(isRefresh: Bool)
 
     func prefetch(by indexPath: IndexPath)
 }
 
-class AlbumsVM {
+class PhotosVM {
 
-    private weak var viewController: AlbumsVCProtocol!
+    private var album: Album!
+
+    private weak var viewController: PhotosVCProtocol!
 
     private(set) var inProgress = false
 
@@ -40,29 +40,24 @@ class AlbumsVM {
 
     private var parameters: Parameters {
         let offset = (currentPage - 1) * itemsOnPage
-
-        return [.needCovers: "1", .photoSizes: "1", .count: String(itemsOnPage),
-                .offset: String(offset), .ownerId: "-41238925"]
+        return [.albumId: String(album.id), .rev: "1", .extended: "1", .feedType: "photo", .photoSizes: "1",
+                .offset: String(offset), .count: "100", .ownerId: "-41238925"]
     }
 
-    init(viewController: AlbumsVCProtocol) {
+    init(_ album: Album, viewController: PhotosVCProtocol) {
+        self.album = album
         self.viewController = viewController
     }
 }
 
-extension AlbumsVM: AlbumsVMProtocol {
+extension PhotosVM: PhotosVMProtocol {
 
     var count: Int {
-        return Album.count()
+        return 0 // album.photos.count()
     }
 
-    func logout() {
-        VK.sessions.default.logOut()
-        RouterVC.shared.toLogin()
-    }
-
-    func album(at index: Int) -> Album? {
-        return Album.first(offset: index)
+    func photo(at index: Int) -> Photo? {
+        return nil // album.photos.first(offset: index)
     }
 
     func fetch(isRefresh: Bool = false) {
@@ -79,28 +74,30 @@ extension AlbumsVM: AlbumsVMProtocol {
             viewController.fetching()
         }
 
-        VK.API.Photos.getAlbums(parameters)
+        VK.API.Photos.get(parameters)
             .onSuccess(onSuccess)
             .onError(onError)
             .send()
     }
 
     func prefetch(by indexPath: IndexPath) {
-        guard indexPath.row >= count - 6 else {
+        guard indexPath.row >= count - 100 else {
             return
         }
         fetch(isRefresh: false)
     }
 
     private func onSuccess(_ data: Data) {
-        if let response = try? JSONDecoder().decode(AlbumsResponse.self, from: data) {
+        //print(String(data: data, encoding: .utf8))
+
+        if let response = try? JSONDecoder().decode(ApiResponse.self, from: data) {
             isFinished = response.count == 0
 
-            for item in response.items {
-                Album.create(id: item.id,
-                             title: item.title,
-                             thumb: item.thumb)
-            }
+//            for item in response.items {
+//                album.photos.create(id: item.id,
+//                                    title: item.title,
+//                                    thumb: item.thumb)
+//            }
 
             currentPage += 1
 

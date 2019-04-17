@@ -10,11 +10,13 @@ import UIKit
 
 extension UIViewController {
 
-    class func storyboardInstance<T: UIViewController>() -> T {
+    private class func storyboardInstancePrivate<T: UIViewController>() -> T? {
         let name = String(describing: self)
         let storyboard = UIStoryboard(name: name, bundle: nil)
-        // swiftlint:disable force_cast
-        return storyboard.instantiateInitialViewController() as! T
-        // swiftlint:enable
+        return storyboard.instantiateInitialViewController() as? T
+    }
+
+    class func storyboardInstance() -> Self {
+        return storyboardInstancePrivate()!
     }
 }

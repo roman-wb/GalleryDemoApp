@@ -10,7 +10,7 @@ import Foundation
 
 extension AlbumsVM {
 
-    struct ApiResponse: Codable {
+    struct AlbumsResponse: Codable {
         var count: Int
         var items: [Album]
 
