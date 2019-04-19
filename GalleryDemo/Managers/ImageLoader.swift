@@ -19,21 +19,17 @@ protocol ImageLoaderDelegate: class {
 
 final class ImageLoader {
 
-    weak var delegate: ImageLoaderDelegate?
-
     var url: URL
 
-    private var downloadTask: URLSessionDownloadTask?
+    weak var delegate: ImageLoaderDelegate?
 
-    private lazy var cache: URLCache = {
-        return URLCache(memoryCapacity: 0, diskCapacity: 100 * 1024 * 1024, diskPath: "ImageLoader.Cache")
-    }()
+    private var dataTask: URLSessionDataTask?
 
-    private lazy var urlSession: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.urlCache = urlCache
-        return URLSession(configuration: config)
-    }()
+    static var cache = NSCache<NSString, UIImage>()
+
+    private var cacheKey: NSString {
+        return url.relativeString as NSString
+    }
 
     init(url: URL, delegate: ImageLoaderDelegate?) {
         self.url = url
@@ -43,31 +39,32 @@ final class ImageLoader {
     func download() {
         delegate?.imageLoaderWillDownloading(imageLoader: self, url: url)
 
-        downloadTask = urlSession.downloadTask(with: url, completionHandler: completionHandler)
-        downloadTask?.resume()
+        if let image = ImageLoader.cache.object(forKey: cacheKey) {
+            delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: image)
+            return
+        }
+
+        dataTask = URLSession.shared.dataTask(with: url, completionHandler: completionHandler)
+        dataTask?.resume()
     }
 
     func cancel() {
-        downloadTask?.cancel()
+        dataTask?.cancel()
     }
 
-    private func completionHandler(localURL: URL?, response: URLResponse?, error: Error?) {
+    private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
         guard
             error == nil,
-            let localURL = localURL,
-            let response = response,
-            let originalData = try? Data(contentsOf: localURL),
-            let originalImage = UIImage(data: originalData),
-            let resizedImage = originalImage.resize(CGSize(width: 800, height: 800)),
-            let resizedData = resizedImage.jpegData(compressionQuality: 1) else {
+//            let response = response as? HTTPURLResponse,
+//            response.statusCode == 200,
+            let data = data,
+            let image = UIImage(data: data),
+            let resizedImage = image.resize(CGSize(width: 800, height: 800)) else {
                 delegate?.imageLoaderDidDownloadedWithError(imageLoader: self, url: url)
                 return
         }
 
-        let cachedResponse = CachedURLResponse(response: response, data: resizedData)
-        if let urlRequest = downloadTask?.currentRequest {
-            urlCache.storeCachedResponse(cachedResponse, for: urlRequest)
-        }
+        ImageLoader.cache.setObject(resizedImage, forKey: cacheKey)
 
         delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: resizedImage)
     }

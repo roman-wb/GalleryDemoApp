@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		301136FB226B7EB800894D04 /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301136FA226B7EB800894D04 /* UITableViewCell+Extension.swift */; };
+		301136FD226B813700894D04 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301136FC226B813700894D04 /* UITableView+Extension.swift */; };
 		30120FE22251F28B009451E5 /* SwiftyVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30120FE12251F28B009451E5 /* SwiftyVK.framework */; };
 		30120FE42251F309009451E5 /* VKDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FE32251F309009451E5 /* VKDelegate.swift */; };
 		30120FE822520B05009451E5 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FE722520B05009451E5 /* LoginVC.swift */; };
@@ -16,6 +18,9 @@
 		30120FFE225252A5009451E5 /* AlbumsVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30120FFD225252A5009451E5 /* AlbumsVC.storyboard */; };
 		3012100022525909009451E5 /* AlbumsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FFF22525909009451E5 /* AlbumsCell.swift */; };
 		302985DB225B41CA0080E790 /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302985DA225B41CA0080E790 /* LoginVM.swift */; };
+		302D33D6226A66D400593DD0 /* ProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 302D33D5226A66D400593DD0 /* ProgressView.xib */; };
+		302D33D8226A67E800593DD0 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D7226A67E800593DD0 /* ProgressView.swift */; };
+		302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */; };
 		3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */; };
 		303D0A752266FBAD0099CCA5 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */; };
 		30481D04225005500087F242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30481D03225005500087F242 /* AppDelegate.swift */; };
@@ -28,6 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		301136FA226B7EB800894D04 /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
+		301136FC226B813700894D04 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		30120FE12251F28B009451E5 /* SwiftyVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyVK.framework; path = Carthage/Build/iOS/SwiftyVK.framework; sourceTree = "<group>"; };
 		30120FE32251F309009451E5 /* VKDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKDelegate.swift; sourceTree = "<group>"; };
 		30120FE722520B05009451E5 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -37,6 +44,9 @@
 		30120FFD225252A5009451E5 /* AlbumsVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumsVC.storyboard; sourceTree = "<group>"; };
 		30120FFF22525909009451E5 /* AlbumsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsCell.swift; sourceTree = "<group>"; };
 		302985DA225B41CA0080E790 /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
+		302D33D5226A66D400593DD0 /* ProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProgressView.xib; sourceTree = "<group>"; };
+		302D33D7226A67E800593DD0 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		3039BFAF225CF24100599185 /* Gallery.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gallery.xcdatamodel; sourceTree = "<group>"; };
 		303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30481D00225005500087F242 /* GalleryDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +85,9 @@
 			children = (
 				30120FEF22522409009451E5 /* UIViewController+Extension.swift */,
 				303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */,
+				302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */,
+				301136FA226B7EB800894D04 /* UITableViewCell+Extension.swift */,
+				301136FC226B813700894D04 /* UITableView+Extension.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -105,6 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				30481D05225005500087F242 /* RouterVC.swift */,
+				302D33D5226A66D400593DD0 /* ProgressView.xib */,
+				302D33D7226A67E800593DD0 /* ProgressView.swift */,
 				3012100122525916009451E5 /* Logic */,
 				3012100222525921009451E5 /* Albums */,
 			);
@@ -212,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30120FFC22523D98009451E5 /* LoginVC.storyboard in Resources */,
+				302D33D6226A66D400593DD0 /* ProgressView.xib in Resources */,
 				30120FFE225252A5009451E5 /* AlbumsVC.storyboard in Resources */,
 				30481D0E225005510087F242 /* LaunchScreen.storyboard in Resources */,
 				30481D0B225005510087F242 /* Assets.xcassets in Resources */,
@@ -250,7 +266,10 @@
 				303D0A752266FBAD0099CCA5 /* UIImage+Extension.swift in Sources */,
 				30120FFA22523793009451E5 /* AlbumsVC.swift in Sources */,
 				30481D06225005500087F242 /* RouterVC.swift in Sources */,
+				301136FB226B7EB800894D04 /* UITableViewCell+Extension.swift in Sources */,
+				302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */,
 				30481D04225005500087F242 /* AppDelegate.swift in Sources */,
+				301136FD226B813700894D04 /* UITableView+Extension.swift in Sources */,
 				309281342253EC9800987F5B /* ImageLoader.swift in Sources */,
 				30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */,
 				302985DB225B41CA0080E790 /* LoginVM.swift in Sources */,
@@ -258,6 +277,7 @@
 				3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */,
 				30120FE42251F309009451E5 /* VKDelegate.swift in Sources */,
 				30120FE822520B05009451E5 /* LoginVC.swift in Sources */,
+				302D33D8226A67E800593DD0 /* ProgressView.swift in Sources */,
 				3064534F2265920F00D2B0D9 /* AlbumsResponse.swift in Sources */,
 				3012100022525909009451E5 /* AlbumsCell.swift in Sources */,
 			);

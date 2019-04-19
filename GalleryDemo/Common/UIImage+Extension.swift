@@ -10,6 +10,14 @@ import UIKit
 
 extension UIImage {
 
+    func optimized() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.main.scale)
+        draw(in: CGRect(origin: .zero, size: size))
+        let optimizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return optimizedImage ?? UIImage()
+    }
+
     func resize(_ resize: CGSize) -> UIImage? {
         let widthRatio = resize.width / size.width
         let heightRatio = resize.height / size.height

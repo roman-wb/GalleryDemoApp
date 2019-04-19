@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB" customClass="ProgressView" customModule="GalleryDemo" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="433" height="50"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label111" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hqr-Jd-Iba">
+                    <rect key="frame" x="0.0" y="0.0" width="433" height="50"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="zWf-gp-gJF">
+                    <rect key="frame" x="206.5" y="15" width="20" height="20"/>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Hqr-Jd-Iba" secondAttribute="trailing" id="H5P-la-u4q"/>
+                <constraint firstItem="Hqr-Jd-Iba" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="U5q-qg-lcR"/>
+                <constraint firstItem="zWf-gp-gJF" firstAttribute="centerX" secondItem="Hqr-Jd-Iba" secondAttribute="centerX" id="YKA-KK-Eo4"/>
+                <constraint firstItem="Hqr-Jd-Iba" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="n42-9U-Ovd"/>
+                <constraint firstItem="zWf-gp-gJF" firstAttribute="centerY" secondItem="Hqr-Jd-Iba" secondAttribute="centerY" id="sdA-6S-sKc"/>
+                <constraint firstAttribute="bottom" secondItem="Hqr-Jd-Iba" secondAttribute="bottom" id="w6h-Wy-bdn"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="indicator" destination="zWf-gp-gJF" id="a7f-zk-YbS"/>
+                <outlet property="label" destination="Hqr-Jd-Iba" id="Og2-yQ-tVV"/>
+            </connections>
+            <point key="canvasLocation" x="145.6521739130435" y="175.44642857142856"/>
+        </view>
+    </objects>
+</document>
