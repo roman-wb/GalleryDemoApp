@@ -29,7 +29,7 @@ final class AlbumsVC: UIViewController {
 
     private var isRefreshFinishing = false
 
-    private var progressView: ProgressView!
+    private var progressView: AlbumsProgressView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +58,7 @@ final class AlbumsVC: UIViewController {
     }
 
     private func configureProgressView() {
-        progressView = ProgressView.nibInstance()
+        progressView = AlbumsProgressView.nibInstance()
     }
 
     @objc func tapLogoutButton(_ sender: Any) {
@@ -83,8 +83,7 @@ final class AlbumsVC: UIViewController {
         }
         if tableView.isDragging {
             isRefreshFinishing = true
-        }
-        else {
+        } else {
             refreshControl.endRefreshing()
         }
     }
@@ -106,10 +105,8 @@ extension AlbumsVC: AlbumsVCProtocol {
 
     func fetchCompleted() {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-
-            self.stopRefreshing()
-            self.tableView.safeReloadData()
+            self?.tableView.safeReloadData()
+            self?.stopRefreshing()
         }
     }
 
@@ -122,15 +119,26 @@ extension AlbumsVC: AlbumsVCProtocol {
 
 extension AlbumsVC: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let album = viewModel.album(at: indexPath.row) else {
+            return
+        }
+
+        let viewController = PhotosVC.storyboardInstance()
+        viewController.setAlbum(album)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? AlbumsCell {
-            let album = viewModel.album(at: indexPath.row)
+        guard let cell = cell as? AlbumsCell else {
+            return
+        }
+
+        if let album = viewModel.album(at: indexPath.row) {
             cell.configure(album)
         }
 
-        if indexPath.row >= viewModel.count - 10 {
-            viewModel.fetch(as: .preload)
-        }
+        viewModel.prefetchIfNeeded(at: indexPath)
     }
 
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

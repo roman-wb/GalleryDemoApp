@@ -8,19 +8,17 @@
 
 import UIKit
 
-final class AlbumsCell: UITableViewCell {
+final class PhotosCell: UICollectionViewCell {
 
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var thumbImageView: UIImageView!
-    @IBOutlet private var titleLabel: UILabel!
 
     private var thumbURL: URL?
 
     private var imageLoader: ImageLoader?
 
-    func configure(_ album: AlbumsResponse.Album) {
-        thumbURL = album.thumbURL
-        titleLabel.text = album.title
+    func configure(_ photo: PhotosResponse.Photo) {
+        thumbURL = photo.thumbURL
 
         if let thumbURL = thumbURL {
             imageLoader = ImageLoader(url: thumbURL, delegate: self)
@@ -33,7 +31,7 @@ final class AlbumsCell: UITableViewCell {
     }
 }
 
-extension AlbumsCell: ImageLoaderDelegate {
+extension PhotosCell: ImageLoaderDelegate {
 
     func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
         guard self.thumbURL == url else {

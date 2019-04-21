@@ -10,15 +10,7 @@ import UIKit
 
 extension UIImage {
 
-    func optimized() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.main.scale)
-        draw(in: CGRect(origin: .zero, size: size))
-        let optimizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return optimizedImage ?? UIImage()
-    }
-
-    func resize(_ resize: CGSize) -> UIImage? {
+    func resize(_ resize: CGSize, opaque: Bool = true) -> UIImage? {
         let widthRatio = resize.width / size.width
         let heightRatio = resize.height / size.height
 
@@ -31,7 +23,7 @@ extension UIImage {
 
         let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
 
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        UIGraphicsBeginImageContextWithOptions(newSize, opaque, 1.0)
         draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

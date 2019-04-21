@@ -16,3 +16,12 @@ extension UITableView {
         contentOffset = offset
     }
 }
+
+extension UICollectionView {
+
+    func safeReloadData() {
+        let offset = contentOffset
+        reloadData()
+        contentOffset = offset
+    }
+}

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProgressView: UIView {
+class AlbumsProgressView: UIView {
 
     @IBOutlet private var indicator: UIActivityIndicatorView!
     @IBOutlet private var label: UILabel!

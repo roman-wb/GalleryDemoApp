@@ -12,7 +12,7 @@ protocol ImageLoaderDelegate: class {
 
     func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL)
 
-    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage)
+    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool)
 
     func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL)
 }
@@ -40,7 +40,7 @@ final class ImageLoader {
         delegate?.imageLoaderWillDownloading(imageLoader: self, url: url)
 
         if let image = ImageLoader.cache.object(forKey: cacheKey) {
-            delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: image)
+            delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: image, fromCache: true)
             return
         }
 
@@ -66,6 +66,6 @@ final class ImageLoader {
 
         ImageLoader.cache.setObject(resizedImage, forKey: cacheKey)
 
-        delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: resizedImage)
+        delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: resizedImage, fromCache: false)
     }
 }

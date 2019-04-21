@@ -14,3 +14,10 @@ extension UITableViewCell {
         return String(describing: self)
     }
 }
+
+extension UICollectionReusableView {
+
+    static var identifier: String {
+        return String(describing: self)
+    }
+}

@@ -19,12 +19,14 @@ protocol AlbumsVMProtocol: class {
 
     func logout()
 
-    func album(at: Int) -> AlbumsResponse.Album
+    func album(at: Int) -> AlbumsResponse.Album?
 
     func fetch(as action: AlbumsVM.Action)
+
+    func prefetchIfNeeded(at indexPath: IndexPath)
 }
 
-class AlbumsVM {
+final class AlbumsVM {
 
     enum Action {
         case load, preload, reload
@@ -38,7 +40,7 @@ class AlbumsVM {
 
     private(set) var isFinished = false
 
-    private let perPage = 25
+    private let perPage = 30
 
     private var currentPage = 0
 
@@ -67,7 +69,10 @@ extension AlbumsVM: AlbumsVMProtocol {
         RouterVC.shared.toLogin()
     }
 
-    func album(at index: Int) -> AlbumsResponse.Album {
+    func album(at index: Int) -> AlbumsResponse.Album? {
+        guard albums.indices.contains(index) else {
+            return nil
+        }
         return albums[index]
     }
 
@@ -98,6 +103,13 @@ extension AlbumsVM: AlbumsVMProtocol {
             .send()
     }
 
+    func prefetchIfNeeded(at indexPath: IndexPath) {
+        guard indexPath.row >= count - perPage / 2 else {
+            return
+        }
+        fetch(as: .preload)
+    }
+
     private func onSuccess(_ data: Data) {
         if let response = try? JSONDecoder().decode(AlbumsResponse.self, from: data) {
             isFinished = response.count == 0
@@ -109,7 +121,7 @@ extension AlbumsVM: AlbumsVMProtocol {
 
             if isFinished {
                 if count > 0 {
-                    viewController.showProgressLabel(text: "Total albums \(count)")
+                    viewController.showProgressLabel(text: "\(count) albums")
                 } else {
                     viewController.showProgressLabel(text: "Albums not found")
                 }
