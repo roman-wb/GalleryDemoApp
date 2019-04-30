@@ -8,13 +8,11 @@
 
 import UIKit
 
-protocol LoginVCProtocol: class {
-
+protocol LoginVCProtocol: AnyObject {
     func showAlert(_ message: String)
 }
 
 final class LoginVC: UIViewController {
-
     private var viewModel: LoginVMProtocol!
 
     override func viewDidLoad() {
@@ -29,16 +27,13 @@ final class LoginVC: UIViewController {
 }
 
 extension LoginVC: LoginVCProtocol {
-
     func showAlert(_ message: String) {
         let alertController = UIAlertController(title: message,
                                                 message: nil,
                                                 preferredStyle: .alert)
 
         let retryAction = UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-
-            self.viewModel.login()
+            self?.viewModel.login()
         }
         alertController.addAction(retryAction)
 

@@ -9,7 +9,6 @@
 import UIKit
 
 final class PhotosCell: UICollectionViewCell {
-
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var thumbImageView: UIImageView!
 
@@ -26,15 +25,14 @@ final class PhotosCell: UICollectionViewCell {
         }
     }
 
-    func cancel() {
+    func didEndDisplaying() {
         imageLoader?.cancel()
     }
 }
 
 extension PhotosCell: ImageLoaderDelegate {
-
     func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
-        guard self.thumbURL == url else {
+        guard thumbURL == url else {
             return
         }
 
@@ -45,7 +43,7 @@ extension PhotosCell: ImageLoaderDelegate {
     }
 
     func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool) {
-        guard self.thumbURL == url else {
+        guard thumbURL == url else {
             return
         }
 
@@ -56,7 +54,7 @@ extension PhotosCell: ImageLoaderDelegate {
     }
 
     func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL) {
-        guard self.thumbURL == url else {
+        guard thumbURL == url else {
             return
         }
 

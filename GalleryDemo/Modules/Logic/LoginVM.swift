@@ -9,13 +9,11 @@
 import UIKit
 import SwiftyVK
 
-protocol LoginVMProtocol: class {
-
+protocol LoginVMProtocol: AnyObject {
     func login()
 }
 
 final class LoginVM {
-
     private weak var viewController: LoginVCProtocol!
 
     init(viewController: LoginVCProtocol) {
@@ -24,7 +22,6 @@ final class LoginVM {
 }
 
 extension LoginVM: LoginVMProtocol {
-
     func login() {
         VK.sessions.default.logIn(onSuccess: onSuccess, onError: onError)
     }

@@ -8,8 +8,7 @@
 
 import UIKit
 
-protocol ImageLoaderDelegate: class {
-
+protocol ImageLoaderDelegate: AnyObject {
     func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL)
 
     func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool)
@@ -18,7 +17,6 @@ protocol ImageLoaderDelegate: class {
 }
 
 final class ImageLoader {
-
     var url: URL
 
     weak var delegate: ImageLoaderDelegate?
@@ -55,8 +53,8 @@ final class ImageLoader {
     private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
         guard
             error == nil,
-//            let response = response as? HTTPURLResponse,
-//            response.statusCode == 200,
+            let response = response as? HTTPURLResponse,
+            response.statusCode == 200,
             let data = data,
             let image = UIImage(data: data),
             let resizedImage = image.resize(CGSize(width: 800, height: 800)) else {

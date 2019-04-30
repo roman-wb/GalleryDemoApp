@@ -1,5 +1,5 @@
 //
-//  UITableView+Extension.swift
+//  UITableViewCell+Extension.swift
 //  GalleryDemo
 //
 //  Created by roman on 20/04/2019.
@@ -9,7 +9,6 @@
 import UIKit
 
 extension UITableView {
-
     func safeReloadData() {
         let offset = contentOffset
         reloadData()
@@ -17,11 +16,8 @@ extension UITableView {
     }
 }
 
-extension UICollectionView {
-
-    func safeReloadData() {
-        let offset = contentOffset
-        reloadData()
-        contentOffset = offset
+extension UITableViewCell {
+    static var identifier: String {
+        return String(describing: self)
     }
 }

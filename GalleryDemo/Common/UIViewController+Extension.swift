@@ -9,7 +9,6 @@
 import UIKit
 
 extension UIViewController {
-
     private class func storyboardInstancePrivate<T: UIViewController>() -> T? {
         let name = String(describing: self)
         let storyboard = UIStoryboard(name: name, bundle: nil)

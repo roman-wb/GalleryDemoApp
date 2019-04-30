@@ -11,7 +11,6 @@ import SwiftyVK
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
-
     typealias LaunchOptions = [UIApplication.LaunchOptionsKey: Any]
     typealias OpenURLOptions = [UIApplication.OpenURLOptionsKey: Any]
 

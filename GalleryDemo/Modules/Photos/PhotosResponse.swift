@@ -23,15 +23,27 @@ struct PhotosResponse: Codable {
         var id: Int
         var sizes: [Size]
         var thumbURL: URL?
+        var imageURL: URL?
 
         mutating func setup() {
             thumbURL = URL(string: thumb)
+            imageURL = URL(string: image)
         }
 
         private var thumb: String {
             var size = sizes.last!
             for tmpSize in sizes {
-                if tmpSize.width > 200 && tmpSize.width < size.width {
+                if tmpSize.width > 200, tmpSize.width < size.width {
+                    size = tmpSize
+                }
+            }
+            return size.url
+        }
+
+        private var image: String {
+            var size = sizes.last!
+            for tmpSize in sizes {
+                if tmpSize.width > 800, tmpSize.width < size.width {
                     size = tmpSize
                 }
             }

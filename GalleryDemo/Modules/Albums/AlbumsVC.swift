@@ -8,8 +8,7 @@
 
 import UIKit
 
-protocol AlbumsVCProtocol: class {
-
+protocol AlbumsVCProtocol: AnyObject {
     func showProgressIndicator()
 
     func showProgressLabel(text: String)
@@ -20,7 +19,6 @@ protocol AlbumsVCProtocol: class {
 }
 
 final class AlbumsVC: UIViewController {
-
     @IBOutlet private var tableView: UITableView!
 
     private var refreshControl: UIRefreshControl!
@@ -31,9 +29,11 @@ final class AlbumsVC: UIViewController {
 
     private var progressView: AlbumsProgressView!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
+    }
 
+    override func viewDidLoad() {
         viewModel = AlbumsVM(viewController: self)
 
         configureLogoutButton()
@@ -70,9 +70,10 @@ final class AlbumsVC: UIViewController {
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        guard refreshControl.isRefreshing && isRefreshFinishing else {
+        guard refreshControl.isRefreshing, isRefreshFinishing else {
             return
         }
+
         isRefreshFinishing = false
         refreshControl.endRefreshing()
     }
@@ -81,6 +82,7 @@ final class AlbumsVC: UIViewController {
         guard refreshControl.isRefreshing else {
             return
         }
+
         if tableView.isDragging {
             isRefreshFinishing = true
         } else {
@@ -90,7 +92,6 @@ final class AlbumsVC: UIViewController {
 }
 
 extension AlbumsVC: AlbumsVCProtocol {
-
     func showProgressIndicator() {
         DispatchQueue.main.async { [weak self] in
             self?.progressView.showIndicator()
@@ -118,7 +119,6 @@ extension AlbumsVC: AlbumsVCProtocol {
 }
 
 extension AlbumsVC: UITableViewDelegate {
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let album = viewModel.album(at: indexPath.row) else {
             return
@@ -143,7 +143,7 @@ extension AlbumsVC: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let cell = cell as? AlbumsCell {
-            cell.cancel()
+            cell.didEndDisplaying()
         }
     }
 
@@ -157,7 +157,6 @@ extension AlbumsVC: UITableViewDelegate {
 }
 
 extension AlbumsVC: UITableViewDataSource {
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.count
     }

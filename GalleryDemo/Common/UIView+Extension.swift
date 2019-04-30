@@ -9,7 +9,6 @@
 import UIKit
 
 extension UIView {
-
     private class func nibInstancePrivate<T: UIView>() -> T? {
         let name = String(describing: self)
         let nib = UINib(nibName: name, bundle: nil)

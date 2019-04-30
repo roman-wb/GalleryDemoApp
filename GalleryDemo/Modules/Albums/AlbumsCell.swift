@@ -9,7 +9,6 @@
 import UIKit
 
 final class AlbumsCell: UITableViewCell {
-
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var thumbImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
@@ -28,15 +27,14 @@ final class AlbumsCell: UITableViewCell {
         }
     }
 
-    func cancel() {
+    func didEndDisplaying() {
         imageLoader?.cancel()
     }
 }
 
 extension AlbumsCell: ImageLoaderDelegate {
-
     func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
-        guard self.thumbURL == url else {
+        guard thumbURL == url else {
             return
         }
 
@@ -47,7 +45,7 @@ extension AlbumsCell: ImageLoaderDelegate {
     }
 
     func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool) {
-        guard self.thumbURL == url else {
+        guard thumbURL == url else {
             return
         }
 
@@ -58,7 +56,7 @@ extension AlbumsCell: ImageLoaderDelegate {
     }
 
     func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL) {
-        guard self.thumbURL == url else {
+        guard thumbURL == url else {
             return
         }
 

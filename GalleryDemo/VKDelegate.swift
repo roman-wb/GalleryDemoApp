@@ -10,7 +10,6 @@ import UIKit
 import SwiftyVK
 
 final class VKDelegate {
-
     let appId = "6921197"
     let scopes: Scopes = [.photos]
 
@@ -20,7 +19,6 @@ final class VKDelegate {
 }
 
 extension VKDelegate: SwiftyVKDelegate {
-
     func vkNeedsScopes(for sessionId: String) -> Scopes {
         return scopes
     }

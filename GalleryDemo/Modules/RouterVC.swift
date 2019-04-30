@@ -10,7 +10,6 @@ import UIKit
 import SwiftyVK
 
 final class RouterVC: UIViewController {
-
     static let shared = RouterVC()
 
     private(set) var currentViewController: UIViewController!
@@ -49,7 +48,11 @@ final class RouterVC: UIViewController {
     func toMain() {
         let viewController = AlbumsVC.storyboardInstance()
 //        let viewController = PhotosVC.storyboardInstance()
+//        let album = AlbumsResponse.Album(id: 245482265, title: "Name...", sizes: [], thumbURL: nil)
+//        let viewController = DetailsVC.storyboardInstance()
+//        viewController.setAlbum(album)
         let navigationViewController = UINavigationController(rootViewController: viewController)
+        navigationViewController.navigationBar.isTranslucent = true
         to(navigationViewController)
     }
 }

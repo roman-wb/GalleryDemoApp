@@ -8,11 +8,12 @@
 
 import UIKit
 
-protocol PhotosVCProtocol: class {
+protocol PhotosVCProtocol: AnyObject {
+    func setAlbum(_ album: AlbumsResponse.Album)
 
     func showProgressIndicator()
 
-    func showProgressLabel(text: String)
+    func showProgressMessage(_ message: String)
 
     func fetchCompleted()
 
@@ -20,14 +21,13 @@ protocol PhotosVCProtocol: class {
 }
 
 final class PhotosVC: UIViewController {
-
     @IBOutlet private var collectionView: UICollectionView!
+
+    private var album: AlbumsResponse.Album!
 
     private var refreshControl: UIRefreshControl!
 
     private var viewModel: PhotosVMProtocol!
-
-    private var album: AlbumsResponse.Album!
 
     private var isRefreshFinishing = false
 
@@ -39,6 +39,10 @@ final class PhotosVC: UIViewController {
 
     private var cellSize: CGSize!
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -47,16 +51,13 @@ final class PhotosVC: UIViewController {
         configureNavigationBar()
         configureRefreshControl()
 
-        viewModel.fetch(as: .load)
+        viewModel.fetch(isRefresh: false)
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        configureCellSize()
-    }
 
-    func setAlbum(_ album: AlbumsResponse.Album) {
-        self.album = album
+        configureCellSize()
     }
 
     private func configureNavigationBar() {
@@ -73,6 +74,7 @@ final class PhotosVC: UIViewController {
         guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             fatalError("Layout not inherit from UICollectionViewFlowLayout")
         }
+
         let layoutWidth = view.safeAreaLayoutGuide.layoutFrame.width
         let width = layoutWidth - layout.sectionInset.left - layout.sectionInset.right -
                     layout.minimumLineSpacing * (cellsInline - 1)
@@ -81,21 +83,33 @@ final class PhotosVC: UIViewController {
     }
 
     @objc func handleRefreshControl(_ sender: Any) {
-        viewModel.fetch(as: .reload)
+        viewModel.fetch(isRefresh: true)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        guard refreshControl.isRefreshing && isRefreshFinishing else {
+        guard refreshControl.isRefreshing, isRefreshFinishing else {
             return
         }
+
         isRefreshFinishing = false
         refreshControl.endRefreshing()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        guard let photo = viewModel.photo(at: indexPath.row) else {
+//            return
+//        }
+//
+//        let viewController = DetailsVC.storyboardInstance()
+//        viewController.setAlbum(album, indexPath: indexPath)
+//        navigationController?.pushViewController(viewController, animated: true)
     }
 
     private func stopRefreshing() {
         guard refreshControl.isRefreshing else {
             return
         }
+
         if collectionView.isDragging {
             isRefreshFinishing = true
         } else {
@@ -105,6 +119,9 @@ final class PhotosVC: UIViewController {
 }
 
 extension PhotosVC: PhotosVCProtocol {
+    func setAlbum(_ album: AlbumsResponse.Album) {
+        self.album = album
+    }
 
     func showProgressIndicator() {
         DispatchQueue.main.async { [weak self] in
@@ -112,9 +129,9 @@ extension PhotosVC: PhotosVCProtocol {
         }
     }
 
-    func showProgressLabel(text: String) {
+    func showProgressMessage(_ message: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.progressView.showLabel(text: text)
+            self?.progressView.showLabel(message)
         }
     }
 
@@ -133,13 +150,12 @@ extension PhotosVC: PhotosVCProtocol {
 }
 
 extension PhotosVC: UICollectionViewDelegateFlowLayout {
-
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
-        let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
                                                                    withReuseIdentifier: PhotosProgressView.identifier,
                                                                    for: indexPath)
-        progressView = cell as? PhotosProgressView
+        progressView = view as? PhotosProgressView
         return progressView
     }
 
@@ -150,27 +166,26 @@ extension PhotosVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? PhotosCell else {
-            return
+        guard
+            let cell = cell as? PhotosCell,
+            let photo = viewModel.photo(at: indexPath.row) else {
+                return
         }
 
-        if let photo = viewModel.photo(at: indexPath.row) {
-            cell.configure(photo)
-        }
-
-        viewModel.prefetchIfNeeded(at: indexPath)
+        cell.configure(photo)
     }
 
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if let cell = cell as? PhotosCell {
-            cell.cancel()
+        guard let cell = cell as? PhotosCell else {
+            return
         }
+
+        cell.didEndDisplaying()
     }
 }
 
 extension PhotosVC: UICollectionViewDataSource {
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.count
     }

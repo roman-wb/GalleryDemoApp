@@ -9,8 +9,7 @@
 import UIKit
 import SwiftyVK
 
-protocol AlbumsVMProtocol: class {
-
+protocol AlbumsVMProtocol: AnyObject {
     var inProgress: Bool { get }
 
     var isFinished: Bool { get }
@@ -27,7 +26,6 @@ protocol AlbumsVMProtocol: class {
 }
 
 final class AlbumsVM {
-
     enum Action {
         case load, preload, reload
     }
@@ -59,7 +57,6 @@ final class AlbumsVM {
 }
 
 extension AlbumsVM: AlbumsVMProtocol {
-
     var count: Int {
         return albums.count
     }
@@ -73,6 +70,7 @@ extension AlbumsVM: AlbumsVMProtocol {
         guard albums.indices.contains(index) else {
             return nil
         }
+
         return albums[index]
     }
 
@@ -107,6 +105,7 @@ extension AlbumsVM: AlbumsVMProtocol {
         guard indexPath.row >= count - perPage / 2 else {
             return
         }
+
         fetch(as: .preload)
     }
 
