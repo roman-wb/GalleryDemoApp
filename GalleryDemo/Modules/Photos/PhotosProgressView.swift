@@ -9,10 +9,12 @@
 import UIKit
 
 final class PhotosProgressView: UICollectionReusableView {
+
     @IBOutlet private var indicator: UIActivityIndicatorView!
     @IBOutlet private var label: UILabel!
 
     func showIndicator() {
+        indicator.startAnimating()
         indicator.isHidden = false
         label.isHidden = true
     }
@@ -20,6 +22,7 @@ final class PhotosProgressView: UICollectionReusableView {
     func showLabel(_ text: String) {
         label.isHidden = false
         label.text = text
+        indicator.stopAnimating()
         indicator.isHidden = true
     }
 }

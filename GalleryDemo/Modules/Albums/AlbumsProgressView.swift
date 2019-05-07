@@ -9,10 +9,12 @@
 import UIKit
 
 class AlbumsProgressView: UIView {
+
     @IBOutlet private var indicator: UIActivityIndicatorView!
     @IBOutlet private var label: UILabel!
 
     func showIndicator() {
+        indicator.startAnimating()
         indicator.isHidden = false
         label.isHidden = true
     }
@@ -20,6 +22,7 @@ class AlbumsProgressView: UIView {
     func showLabel(text: String) {
         label.isHidden = false
         label.text = text
+        indicator.stopAnimating()
         indicator.isHidden = true
     }
 }

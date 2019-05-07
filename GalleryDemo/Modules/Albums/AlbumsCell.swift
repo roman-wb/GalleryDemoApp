@@ -7,24 +7,33 @@
 //
 
 import UIKit
+import Swinject
 
 final class AlbumsCell: UITableViewCell {
+
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var thumbImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
 
+    private var container: Container!
+    private var album: AlbumsResponse.Album!
+
     private var thumbURL: URL?
+    private var imageLoader: ImageLoaderProtocol?
 
-    private var imageLoader: ImageLoader?
+    func configure(container: Container, album: AlbumsResponse.Album) {
+        self.container = container
+        self.album = album
 
-    func configure(_ album: AlbumsResponse.Album) {
         thumbURL = album.thumbURL
         titleLabel.text = album.title
 
-        if let thumbURL = thumbURL {
-            imageLoader = ImageLoader(url: thumbURL, delegate: self)
-            imageLoader?.download()
+        guard let thumbURL = thumbURL else {
+            return
         }
+
+        imageLoader = container.resolve(ImageLoaderProtocol.self)!
+        imageLoader?.download(url: thumbURL, delegate: self)
     }
 
     func didEndDisplaying() {
@@ -33,7 +42,7 @@ final class AlbumsCell: UITableViewCell {
 }
 
 extension AlbumsCell: ImageLoaderDelegate {
-    func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
+    func imageLoaderWillDownloading(imageLoader: ImageLoaderProtocol, url: URL) {
         guard thumbURL == url else {
             return
         }
@@ -44,7 +53,7 @@ extension AlbumsCell: ImageLoaderDelegate {
         }
     }
 
-    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool) {
+    func imageLoaderDidDownloaded(imageLoader: ImageLoaderProtocol, url: URL, image: UIImage, fromCache: Bool) {
         guard thumbURL == url else {
             return
         }
@@ -55,7 +64,7 @@ extension AlbumsCell: ImageLoaderDelegate {
         }
     }
 
-    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL) {
+    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoaderProtocol, url: URL) {
         guard thumbURL == url else {
             return
         }

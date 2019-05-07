@@ -1,24 +1,22 @@
 //
-//  LoginViewModel.swift
+//  LoginVM.swift
 //  GalleryDemo
 //
-//  Created by roman on 08/04/2019.
+//  Created by roman on 07/05/2019.
 //  Copyright © 2019 figma. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import SwiftyVK
 
 protocol LoginVMProtocol: AnyObject {
+    var viewController: LoginVCProtocol! { get set }
+
     func login()
 }
 
-final class LoginVM {
-    private weak var viewController: LoginVCProtocol!
-
-    init(viewController: LoginVCProtocol) {
-        self.viewController = viewController
-    }
+class LoginVM {
+    weak var viewController: LoginVCProtocol!
 }
 
 extension LoginVM: LoginVMProtocol {
@@ -28,7 +26,7 @@ extension LoginVM: LoginVMProtocol {
 
     private func onSuccess(data: [String: String]) {
         DispatchQueue.main.async {
-            RouterVC.shared.toMain()
+            AppDelegate.shared.showNavigationVC()
         }
     }
 

@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import Swinject
 
 protocol AlbumsVCProtocol: AnyObject {
+    var container: Container! { get set }
+
+    var viewModel: AlbumsVMProtocol! { get set }
+
     func showProgressIndicator()
 
-    func showProgressLabel(text: String)
+    func showProgressMessage(_ message: String)
 
     func fetchCompleted()
 
@@ -19,28 +24,25 @@ protocol AlbumsVCProtocol: AnyObject {
 }
 
 final class AlbumsVC: UIViewController {
+
     @IBOutlet private var tableView: UITableView!
 
-    private var refreshControl: UIRefreshControl!
+    var container: Container!
 
-    private var viewModel: AlbumsVMProtocol!
+    var viewModel: AlbumsVMProtocol!
+
+    private var refreshControl: UIRefreshControl!
 
     private var isRefreshFinishing = false
 
     private var progressView: AlbumsProgressView!
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
-    }
-
     override func viewDidLoad() {
-        viewModel = AlbumsVM(viewController: self)
-
         configureLogoutButton()
         configureRefreshControl()
         configureProgressView()
 
-        viewModel.fetch(as: .load)
+        viewModel.fetch(isRefresh: false)
     }
 
     private func configureLogoutButton() {
@@ -66,7 +68,7 @@ final class AlbumsVC: UIViewController {
     }
 
     @objc func handleRefreshControl(_ sender: Any) {
-        viewModel.fetch(as: .reload)
+        viewModel.fetch(isRefresh: true)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -98,9 +100,9 @@ extension AlbumsVC: AlbumsVCProtocol {
         }
     }
 
-    func showProgressLabel(text: String) {
+    func showProgressMessage(_ message: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.progressView.showLabel(text: text)
+            self?.progressView.showLabel(text: message)
         }
     }
 
@@ -124,27 +126,26 @@ extension AlbumsVC: UITableViewDelegate {
             return
         }
 
-        let viewController = PhotosVC.storyboardInstance()
-        viewController.setAlbum(album)
-        navigationController?.pushViewController(viewController, animated: true)
+        let photosVC = container.resolve(PhotosVC.self, argument: album)!
+        navigationController?.pushViewController(photosVC, animated: true)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        viewModel.fetchIfNeeded(at: indexPath)
+
+        guard let cell = cell as? AlbumsCell, let album = viewModel.album(at: indexPath.row) else {
+            return
+        }
+
+        cell.configure(container: container, album: album)
+    }
+
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let cell = cell as? AlbumsCell else {
             return
         }
 
-        if let album = viewModel.album(at: indexPath.row) {
-            cell.configure(album)
-        }
-
-        viewModel.prefetchIfNeeded(at: indexPath)
-    }
-
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? AlbumsCell {
-            cell.didEndDisplaying()
-        }
+        cell.didEndDisplaying()
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

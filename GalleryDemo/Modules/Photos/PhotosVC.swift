@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import Swinject
 
 protocol PhotosVCProtocol: AnyObject {
-    func setAlbum(_ album: AlbumsResponse.Album)
+    var container: Container! { get set }
+
+    var viewModel: PhotosVMProtocol! { get set }
 
     func showProgressIndicator()
 
@@ -21,13 +24,14 @@ protocol PhotosVCProtocol: AnyObject {
 }
 
 final class PhotosVC: UIViewController {
+
     @IBOutlet private var collectionView: UICollectionView!
 
-    private var album: AlbumsResponse.Album!
+    var container: Container!
+
+    var viewModel: PhotosVMProtocol!
 
     private var refreshControl: UIRefreshControl!
-
-    private var viewModel: PhotosVMProtocol!
 
     private var isRefreshFinishing = false
 
@@ -39,14 +43,8 @@ final class PhotosVC: UIViewController {
 
     private var cellSize: CGSize!
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        viewModel = PhotosVM(viewController: self, album: album)
 
         configureNavigationBar()
         configureRefreshControl()
@@ -54,14 +52,20 @@ final class PhotosVC: UIViewController {
         viewModel.fetch(isRefresh: false)
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        scrollToIndexPath()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
 
         configureCellSize()
     }
 
     private func configureNavigationBar() {
-        navigationItem.title = album.title
+        navigationItem.title = viewModel.album.title
     }
 
     private func configureRefreshControl() {
@@ -77,13 +81,21 @@ final class PhotosVC: UIViewController {
 
         let layoutWidth = view.safeAreaLayoutGuide.layoutFrame.width
         let width = layoutWidth - layout.sectionInset.left - layout.sectionInset.right -
-                    layout.minimumLineSpacing * (cellsInline - 1)
+            layout.minimumLineSpacing * (cellsInline - 1)
         let size = (width / cellsInline).rounded(.down)
         cellSize = CGSize(width: size, height: size)
     }
 
     @objc func handleRefreshControl(_ sender: Any) {
         viewModel.fetch(isRefresh: true)
+    }
+
+    func scrollToIndexPath() {
+        guard let indexPath = viewModel.indexPath else {
+            return
+        }
+
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -96,13 +108,10 @@ final class PhotosVC: UIViewController {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        guard let photo = viewModel.photo(at: indexPath.row) else {
-//            return
-//        }
-//
-//        let viewController = DetailsVC.storyboardInstance()
-//        viewController.setAlbum(album, indexPath: indexPath)
-//        navigationController?.pushViewController(viewController, animated: true)
+        viewModel.indexPath = indexPath
+
+        let detailsVC = container.resolve(DetailsVC.self, argument: viewModel)!
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     private func stopRefreshing() {
@@ -119,10 +128,6 @@ final class PhotosVC: UIViewController {
 }
 
 extension PhotosVC: PhotosVCProtocol {
-    func setAlbum(_ album: AlbumsResponse.Album) {
-        self.album = album
-    }
-
     func showProgressIndicator() {
         DispatchQueue.main.async { [weak self] in
             self?.progressView.showIndicator()
@@ -166,13 +171,13 @@ extension PhotosVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        guard
-            let cell = cell as? PhotosCell,
-            let photo = viewModel.photo(at: indexPath.row) else {
-                return
+        viewModel.fetchIfNeeded(at: indexPath)
+
+        guard let cell = cell as? PhotosCell, let photo = viewModel.photo(at: indexPath.row) else {
+            return
         }
 
-        cell.configure(photo)
+        cell.configure(container: container, photo: photo)
     }
 
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,

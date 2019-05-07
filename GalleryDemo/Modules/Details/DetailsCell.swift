@@ -7,47 +7,52 @@
 //
 
 import UIKit
+import Swinject
 
-final class DetailsCell: UICollectionViewCell, UIScrollViewDelegate {
+final class DetailsCell: UICollectionViewCell {
+
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
 
-    private var imageURL: URL?
-    private var imageLoader: ImageLoader?
+    private var container: Container!
+    private var photo: PhotosResponse.Photo!
 
-    func configure(_ photo: PhotosResponse.Photo) {
+    private var imageURL: URL?
+    private var imageLoader: ImageLoaderProtocol?
+
+    func configure(container: Container, photo: PhotosResponse.Photo) {
+        self.container = container
+        self.photo = photo
+
         imageURL = photo.imageURL
 
-        if let imageURL = imageURL {
-            imageLoader = ImageLoader(url: imageURL, delegate: self)
-            imageLoader?.download()
+        guard let imageURL = imageURL else {
+            return
         }
+
+        imageLoader = container.resolve(ImageLoaderProtocol.self)!
+        imageLoader?.download(url: imageURL, delegate: self)
     }
 
     func setImage(_ image: UIImage) {
         imageView.image = image
+        scrollView.zoomScale = 1.0
 
         let scale = (frame.width - 20) / image.size.width
         let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
         imageView.frame = CGRect(origin: .zero, size: size)
 
-        updateContentInset()
+        scrollView.contentSize = size
+
+        updateInsets()
     }
 
-    func cancel() {
+    func didEndDisplaying() {
         imageLoader?.cancel()
     }
 
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
-    }
-
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        updateContentInset()
-    }
-
-    func updateContentInset() {
+    func updateInsets() {
         let offsetX = max((scrollView.frame.width - imageView.frame.width) / 2, 0)
         let offsetY = max((scrollView.frame.height - imageView.frame.height) / 2, 0)
 
@@ -58,8 +63,18 @@ final class DetailsCell: UICollectionViewCell, UIScrollViewDelegate {
     }
 }
 
+extension DetailsCell: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        updateInsets()
+    }
+}
+
 extension DetailsCell: ImageLoaderDelegate {
-    func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
+    func imageLoaderWillDownloading(imageLoader: ImageLoaderProtocol, url: URL) {
         guard imageURL == url else {
             return
         }
@@ -70,7 +85,7 @@ extension DetailsCell: ImageLoaderDelegate {
         }
     }
 
-    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool) {
+    func imageLoaderDidDownloaded(imageLoader: ImageLoaderProtocol, url: URL, image: UIImage, fromCache: Bool) {
         guard imageURL == url else {
             return
         }
@@ -81,7 +96,7 @@ extension DetailsCell: ImageLoaderDelegate {
         }
     }
 
-    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL) {
+    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoaderProtocol, url: URL) {
         guard imageURL == url else {
             return
         }

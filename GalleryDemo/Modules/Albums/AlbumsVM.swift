@@ -10,6 +10,8 @@ import UIKit
 import SwiftyVK
 
 protocol AlbumsVMProtocol: AnyObject {
+    var viewController: AlbumsVCProtocol! { get set }
+
     var inProgress: Bool { get }
 
     var isFinished: Bool { get }
@@ -20,17 +22,16 @@ protocol AlbumsVMProtocol: AnyObject {
 
     func album(at: Int) -> AlbumsResponse.Album?
 
-    func fetch(as action: AlbumsVM.Action)
+    func fetch(isRefresh: Bool)
 
-    func prefetchIfNeeded(at indexPath: IndexPath)
+    func fetchIfNeeded(at indexPath: IndexPath)
 }
 
 final class AlbumsVM {
-    enum Action {
-        case load, preload, reload
-    }
 
-    private weak var viewController: AlbumsVCProtocol!
+    private let perPage = 30
+
+    weak var viewController: AlbumsVCProtocol!
 
     private var albums = [AlbumsResponse.Album]()
 
@@ -38,21 +39,16 @@ final class AlbumsVM {
 
     private(set) var isFinished = false
 
-    private let perPage = 30
-
-    private var currentPage = 0
-
     private var parameters: Parameters {
-        let offset = currentPage * perPage
         return [.needCovers: "1",
                 .photoSizes: "1",
+                .offset: String(currentPage * perPage),
                 .count: String(perPage),
-                .offset: String(offset),
-                .ownerId: "-41238925"]
+                .ownerId: "-41238925"] // FIXME: Remove ownerId
     }
 
-    init(viewController: AlbumsVCProtocol) {
-        self.viewController = viewController
+    private var currentPage: Int {
+        return count / perPage
     }
 }
 
@@ -63,7 +59,7 @@ extension AlbumsVM: AlbumsVMProtocol {
 
     func logout() {
         VK.sessions.default.logOut()
-        RouterVC.shared.toLogin()
+        AppDelegate.shared.showLoginVC()
     }
 
     func album(at index: Int) -> AlbumsResponse.Album? {
@@ -74,24 +70,17 @@ extension AlbumsVM: AlbumsVMProtocol {
         return albums[index]
     }
 
-    func fetch(as action: AlbumsVM.Action) {
-        switch action {
-        case _ where inProgress:
-            return
-        case .preload where isFinished:
-            return
-        case .load:
-            currentPage = 0
-            viewController.showProgressIndicator()
-        case .preload:
-            currentPage += 1
-            viewController.showProgressIndicator()
-        case .reload:
-            albums.removeAll()
-            currentPage = 0
+    func fetch(isRefresh: Bool) {
+        if isRefresh {
+            albums = []
             isFinished = false
-            viewController.showProgressIndicator()
         }
+
+        if inProgress || isFinished {
+            return
+        }
+
+        viewController?.showProgressIndicator()
 
         inProgress = true
 
@@ -101,43 +90,46 @@ extension AlbumsVM: AlbumsVMProtocol {
             .send()
     }
 
-    func prefetchIfNeeded(at indexPath: IndexPath) {
+    func fetchIfNeeded(at indexPath: IndexPath) {
         guard indexPath.row >= count - perPage / 2 else {
             return
         }
 
-        fetch(as: .preload)
+        fetch(isRefresh: false)
     }
 
     private func onSuccess(_ data: Data) {
-        if let response = try? JSONDecoder().decode(AlbumsResponse.self, from: data) {
-            isFinished = response.count == 0
-
-            for var album in response.items {
-                album.setup()
-                albums.append(album)
-            }
-
-            if isFinished {
-                if count > 0 {
-                    viewController.showProgressLabel(text: "\(count) albums")
-                } else {
-                    viewController.showProgressLabel(text: "Albums not found")
-                }
-            }
-
+        guard let response = try? JSONDecoder().decode(AlbumsResponse.self, from: data) else {
+            viewController?.showProgressMessage("Unknown response from API")
+            viewController?.fetchFailed(with: "Unknown response from API")
             inProgress = false
-            viewController.fetchCompleted()
-        } else {
-            inProgress = false
-            viewController.showProgressLabel(text: "Unknown response from API")
-            viewController.fetchFailed(with: "Unknown response from API")
+            return
         }
+
+        for var album in response.items {
+            album.setup()
+            albums.append(album)
+        }
+
+        isFinished = response.count < perPage
+
+        if isFinished {
+            if count > 0 {
+                viewController?.showProgressMessage("\(count) photos")
+            } else {
+                viewController?.showProgressMessage("Photos not found")
+            }
+        }
+
+        viewController?.fetchCompleted()
+
+        inProgress = false
     }
 
     private func onError(error: VKError) {
+        viewController?.showProgressMessage("No internet connection")
+        viewController?.fetchFailed(with: "No internet connection")
+
         inProgress = false
-        viewController.showProgressLabel(text: "No internet connection")
-        viewController.fetchFailed(with: "No internet connection")
     }
 }

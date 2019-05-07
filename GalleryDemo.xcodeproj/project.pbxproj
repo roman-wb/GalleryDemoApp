@@ -14,7 +14,6 @@
 		30113706226B867700894D04 /* PhotosVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30113701226B867700894D04 /* PhotosVC.storyboard */; };
 		30113707226B867700894D04 /* PhotosCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30113702226B867700894D04 /* PhotosCell.swift */; };
 		30113708226B867700894D04 /* PhotosVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30113703226B867700894D04 /* PhotosVC.swift */; };
-		30120FE22251F28B009451E5 /* SwiftyVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30120FE12251F28B009451E5 /* SwiftyVK.framework */; };
 		30120FE42251F309009451E5 /* VKDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FE32251F309009451E5 /* VKDelegate.swift */; };
 		30120FE822520B05009451E5 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FE722520B05009451E5 /* LoginVC.swift */; };
 		30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FEF22522409009451E5 /* UIViewController+Extension.swift */; };
@@ -22,25 +21,25 @@
 		30120FFC22523D98009451E5 /* LoginVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30120FFB22523D98009451E5 /* LoginVC.storyboard */; };
 		30120FFE225252A5009451E5 /* AlbumsVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30120FFD225252A5009451E5 /* AlbumsVC.storyboard */; };
 		3012100022525909009451E5 /* AlbumsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30120FFF22525909009451E5 /* AlbumsCell.swift */; };
-		302985DB225B41CA0080E790 /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302985DA225B41CA0080E790 /* LoginVM.swift */; };
 		302D33D6226A66D400593DD0 /* AlbumsProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */; };
 		302D33D8226A67E800593DD0 /* AlbumsProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */; };
 		302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */; };
 		3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */; };
 		303D0A752266FBAD0099CCA5 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */; };
 		30481D04225005500087F242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30481D03225005500087F242 /* AppDelegate.swift */; };
-		30481D06225005500087F242 /* RouterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30481D05225005500087F242 /* RouterVC.swift */; };
 		30481D0B225005510087F242 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30481D0A225005510087F242 /* Assets.xcassets */; };
 		30481D0E225005510087F242 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30481D0C225005510087F242 /* LaunchScreen.storyboard */; };
+		305265C922807DA10099D2BD /* SwiftyVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30120FE12251F28B009451E5 /* SwiftyVK.framework */; };
 		3064534F2265920F00D2B0D9 /* AlbumsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3064534E2265920F00D2B0D9 /* AlbumsResponse.swift */; };
-		307F78BE226D930B00F3EDAA /* DetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307F78BB226D930B00F3EDAA /* DetailsVM.swift */; };
+		307B4F5822815E3300D99FA7 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307B4F5722815E3300D99FA7 /* UINavigationController+Extension.swift */; };
+		307B4F5A2281638800D99FA7 /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307B4F592281638800D99FA7 /* LoginVM.swift */; };
 		307F78BF226D930B00F3EDAA /* DetailsVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 307F78BC226D930B00F3EDAA /* DetailsVC.storyboard */; };
 		307F78C0226D930B00F3EDAA /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307F78BD226D930B00F3EDAA /* DetailsVC.swift */; };
 		307F78C2226DA38900F3EDAA /* DetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307F78C1226DA38900F3EDAA /* DetailsCell.swift */; };
 		3081F962226C99A900FB88D1 /* PhotosProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3081F961226C99A900FB88D1 /* PhotosProgressView.swift */; };
 		309281302253D81B00987F5B /* AlbumsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3092812F2253D81B00987F5B /* AlbumsVM.swift */; };
 		309281342253EC9800987F5B /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309281332253EC9800987F5B /* ImageLoader.swift */; };
-		30CF141E2272FFB500931957 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CF141D2272FFB500931957 /* UINavigationController+Extension.swift */; };
+		30E0136922807C4B00715206 /* Swinject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E0136822807C4B00715206 /* Swinject.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,7 +58,6 @@
 		30120FFB22523D98009451E5 /* LoginVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LoginVC.storyboard; sourceTree = "<group>"; };
 		30120FFD225252A5009451E5 /* AlbumsVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumsVC.storyboard; sourceTree = "<group>"; };
 		30120FFF22525909009451E5 /* AlbumsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsCell.swift; sourceTree = "<group>"; };
-		302985DA225B41CA0080E790 /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
 		302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumsProgressView.xib; sourceTree = "<group>"; };
 		302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsProgressView.swift; sourceTree = "<group>"; };
 		302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
@@ -67,19 +65,19 @@
 		303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30481D00225005500087F242 /* GalleryDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30481D03225005500087F242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		30481D05225005500087F242 /* RouterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterVC.swift; sourceTree = "<group>"; };
 		30481D0A225005510087F242 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		30481D0D225005510087F242 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		30481D0F225005510087F242 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3064534E2265920F00D2B0D9 /* AlbumsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsResponse.swift; sourceTree = "<group>"; };
-		307F78BB226D930B00F3EDAA /* DetailsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsVM.swift; sourceTree = "<group>"; };
+		307B4F5722815E3300D99FA7 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
+		307B4F592281638800D99FA7 /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
 		307F78BC226D930B00F3EDAA /* DetailsVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DetailsVC.storyboard; sourceTree = "<group>"; };
 		307F78BD226D930B00F3EDAA /* DetailsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
 		307F78C1226DA38900F3EDAA /* DetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsCell.swift; sourceTree = "<group>"; };
 		3081F961226C99A900FB88D1 /* PhotosProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosProgressView.swift; sourceTree = "<group>"; };
 		3092812F2253D81B00987F5B /* AlbumsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsVM.swift; sourceTree = "<group>"; };
 		309281332253EC9800987F5B /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
-		30CF141D2272FFB500931957 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
+		30E0136822807C4B00715206 /* Swinject.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swinject.framework; path = Carthage/Build/iOS/Swinject.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30120FE22251F28B009451E5 /* SwiftyVK.framework in Frameworks */,
+				305265C922807DA10099D2BD /* SwiftyVK.framework in Frameworks */,
+				30E0136922807C4B00715206 /* Swinject.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,7 +100,6 @@
 				30113703226B867700894D04 /* PhotosVC.swift */,
 				301136FF226B867700894D04 /* PhotosVM.swift */,
 				30113702226B867700894D04 /* PhotosCell.swift */,
-				30113700226B867700894D04 /* PhotosResponse.swift */,
 				3081F961226C99A900FB88D1 /* PhotosProgressView.swift */,
 			);
 			path = Photos;
@@ -110,6 +108,7 @@
 		30120FE02251F28A009451E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				30E0136822807C4B00715206 /* Swinject.framework */,
 				30120FE12251F28B009451E5 /* SwiftyVK.framework */,
 			);
 			name = Frameworks;
@@ -119,7 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				30120FEF22522409009451E5 /* UIViewController+Extension.swift */,
-				30CF141D2272FFB500931957 /* UINavigationController+Extension.swift */,
+				307B4F5722815E3300D99FA7 /* UINavigationController+Extension.swift */,
 				302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */,
 				303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */,
 				301136FA226B7EB800894D04 /* UITableView+Extension.swift */,
@@ -133,7 +132,7 @@
 			children = (
 				30120FFB22523D98009451E5 /* LoginVC.storyboard */,
 				30120FE722520B05009451E5 /* LoginVC.swift */,
-				302985DA225B41CA0080E790 /* LoginVM.swift */,
+				307B4F592281638800D99FA7 /* LoginVM.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -145,7 +144,6 @@
 				30120FF922523793009451E5 /* AlbumsVC.swift */,
 				3092812F2253D81B00987F5B /* AlbumsVM.swift */,
 				30120FFF22525909009451E5 /* AlbumsCell.swift */,
-				3064534E2265920F00D2B0D9 /* AlbumsResponse.swift */,
 				302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */,
 				302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */,
 			);
@@ -155,7 +153,6 @@
 		30480B4022525DC9004D5993 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				30481D05225005500087F242 /* RouterVC.swift */,
 				3012100122525916009451E5 /* Logic */,
 				3012100222525921009451E5 /* Albums */,
 				301136FE226B85CC00894D04 /* Photos */,
@@ -186,6 +183,7 @@
 			children = (
 				30120FEC225223C1009451E5 /* Common */,
 				309281392254CA7400987F5B /* Managers */,
+				30E0136722807A4A00715206 /* Responses */,
 				30480B4022525DC9004D5993 /* Modules */,
 				30120FE32251F309009451E5 /* VKDelegate.swift */,
 				30481D03225005500087F242 /* AppDelegate.swift */,
@@ -202,7 +200,6 @@
 			children = (
 				307F78BC226D930B00F3EDAA /* DetailsVC.storyboard */,
 				307F78BD226D930B00F3EDAA /* DetailsVC.swift */,
-				307F78BB226D930B00F3EDAA /* DetailsVM.swift */,
 				307F78C1226DA38900F3EDAA /* DetailsCell.swift */,
 			);
 			path = Details;
@@ -214,6 +211,15 @@
 				309281332253EC9800987F5B /* ImageLoader.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		30E0136722807A4A00715206 /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				3064534E2265920F00D2B0D9 /* AlbumsResponse.swift */,
+				30113700226B867700894D04 /* PhotosResponse.swift */,
+			);
+			path = Responses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,11 +303,13 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyVK.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Swinject.framework",
 			);
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyVK.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Swinject.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -319,11 +327,8 @@
 				307F78C0226D930B00F3EDAA /* DetailsVC.swift in Sources */,
 				30113705226B867700894D04 /* PhotosResponse.swift in Sources */,
 				3081F962226C99A900FB88D1 /* PhotosProgressView.swift in Sources */,
-				30CF141E2272FFB500931957 /* UINavigationController+Extension.swift in Sources */,
 				30113704226B867700894D04 /* PhotosVM.swift in Sources */,
 				30120FFA22523793009451E5 /* AlbumsVC.swift in Sources */,
-				30481D06225005500087F242 /* RouterVC.swift in Sources */,
-				307F78BE226D930B00F3EDAA /* DetailsVM.swift in Sources */,
 				301136FB226B7EB800894D04 /* UITableView+Extension.swift in Sources */,
 				302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */,
 				30481D04225005500087F242 /* AppDelegate.swift in Sources */,
@@ -331,12 +336,13 @@
 				301136FD226B813700894D04 /* UICollectionView+Extension.swift in Sources */,
 				309281342253EC9800987F5B /* ImageLoader.swift in Sources */,
 				30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */,
-				302985DB225B41CA0080E790 /* LoginVM.swift in Sources */,
 				309281302253D81B00987F5B /* AlbumsVM.swift in Sources */,
 				3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */,
 				30120FE42251F309009451E5 /* VKDelegate.swift in Sources */,
+				307B4F5822815E3300D99FA7 /* UINavigationController+Extension.swift in Sources */,
 				30113708226B867700894D04 /* PhotosVC.swift in Sources */,
 				30120FE822520B05009451E5 /* LoginVC.swift in Sources */,
+				307B4F5A2281638800D99FA7 /* LoginVM.swift in Sources */,
 				302D33D8226A67E800593DD0 /* AlbumsProgressView.swift in Sources */,
 				3064534F2265920F00D2B0D9 /* AlbumsResponse.swift in Sources */,
 				3012100022525909009451E5 /* AlbumsCell.swift in Sources */,

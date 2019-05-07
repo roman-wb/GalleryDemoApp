@@ -31,10 +31,8 @@ struct AlbumsResponse: Codable {
 
         private var thumb: String {
             var size = sizes.last!
-            for tmpSize in sizes {
-                if tmpSize.width > 800, tmpSize.width < size.width {
-                    size = tmpSize
-                }
+            for tmpSize in sizes where tmpSize.width > 800 && tmpSize.width < size.width {
+                size = tmpSize
             }
             return size.src
         }

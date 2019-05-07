@@ -9,34 +9,41 @@
 import UIKit
 import SwiftyVK
 
-protocol PhotosVMProtocol: AnyObject {
+protocol PhotosVMProtocol {
+    var viewController: PhotosVCProtocol? { get set }
+
+    var indexPath: IndexPath? { get set }
+
+    var album: AlbumsResponse.Album! { get set }
+
+    var photos: [PhotosResponse.Photo] { get }
+
+    var count: Int { get }
+
+    var total: Int { get }
+
     var inProgress: Bool { get }
 
     var isFinished: Bool { get }
 
-    var total: Int { get }
-
-    var count: Int { get }
-
-    var currentPage: Int { get }
-
-    func setAlbum(_ album: AlbumsResponse.Album)
-
-    func setPhotos(_ photos: [PhotosResponse.Photo])
-
-    func photo(at: Int) -> PhotosResponse.Photo?
+    func photo(at index: Int) -> PhotosResponse.Photo?
 
     func fetch(isRefresh: Bool)
+
+    func fetchIfNeeded(at indexPath: IndexPath)
 }
 
 final class PhotosVM {
+
     private let perPage = 100
 
-    private var album: AlbumsResponse.Album!
+    weak var viewController: PhotosVCProtocol?
 
-    private var photos = [PhotosResponse.Photo]()
+    var indexPath: IndexPath?
 
-    private weak var viewController: PhotosVCProtocol?
+    var album: AlbumsResponse.Album!
+
+    private(set) var photos = [PhotosResponse.Photo]()
 
     private(set) var total = 0
 
@@ -45,18 +52,17 @@ final class PhotosVM {
     private(set) var isFinished = false
 
     private var parameters: Parameters {
-        return [.ownerId: "-41238925",
-                .albumId: String(album.id),
+        return [.albumId: String(album.id),
                 .rev: "1",
                 .feedType: "photo",
                 .photoSizes: "1",
+                .count: String(perPage),
                 .offset: String(currentPage * perPage),
-                .count: String(perPage)]
+                .ownerId: "-41238925"] // FIXME: Remove ownerId
     }
 
-    init(viewController: PhotosVCProtocol, album: AlbumsResponse.Album) {
-        self.viewController = viewController
-        self.album = album
+    private var currentPage: Int {
+        return count / perPage
     }
 }
 
@@ -65,24 +71,10 @@ extension PhotosVM: PhotosVMProtocol {
         return photos.count
     }
 
-    var currentPage: Int {
-        return count / perPage
-    }
-
-    func setAlbum(_ album: AlbumsResponse.Album) {
-        self.album = album
-    }
-
-    func setPhotos(_ photos: [PhotosResponse.Photo]) {
-        self.photos = photos
-    }
-
     func photo(at index: Int) -> PhotosResponse.Photo? {
         guard photos.indices.contains(index) else {
             return nil
         }
-
-        fetchIfNeeded(at: index)
 
         return photos[index]
     }
@@ -107,8 +99,8 @@ extension PhotosVM: PhotosVMProtocol {
             .send()
     }
 
-    private func fetchIfNeeded(at index: Int) {
-        guard index >= count - perPage / 2 else {
+    func fetchIfNeeded(at indexPath: IndexPath) {
+        guard indexPath.row >= count - perPage / 2 else {
             return
         }
 
@@ -141,13 +133,14 @@ extension PhotosVM: PhotosVMProtocol {
         }
 
         viewController?.fetchCompleted()
+
         inProgress = false
     }
 
     private func onError(error: VKError) {
-        inProgress = false
-
         viewController?.showProgressMessage("No internet connection")
         viewController?.fetchFailed(with: "No internet connection")
+
+        inProgress = false
     }
 }

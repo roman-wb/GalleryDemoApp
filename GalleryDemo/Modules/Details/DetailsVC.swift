@@ -7,61 +7,80 @@
 //
 
 import UIKit
+import Swinject
 
-protocol DetailsVCProtocol: AnyObject {
-    func fetchCompleted()
+protocol DetailVCProtocol {
+    var container: Container! { get set }
 
-    func fetchFailed(with: String)
+    var viewModel: PhotosVMProtocol! { get set }
 }
 
 final class DetailsVC: UIViewController {
+
     @IBOutlet private var collectionView: UICollectionView!
 
-    private var viewModel: DetailsVMProtocol!
+    var container: Container!
 
-    private var album: AlbumsResponse.Album!
-
-    private var selectedIndexPath: IndexPath!
-
-    private var currentIndex: Int {
-        if
-            let cell = collectionView.visibleCells.first,
-            let indexPath = collectionView.indexPath(for: cell) {
-                return indexPath.row + 1
-        }
-
-        return 1
-    }
+    var viewModel: PhotosVMProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        viewModel = DetailsVM(viewController: self, album: album)
-        viewModel.fetch(as: .load)
+        configureGestures()
+        configureTitle()
 
-        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+        viewModel.fetch(isRefresh: false)
     }
 
-    func setAlbum(_ album: AlbumsResponse.Album, indexPath: IndexPath) {
-        self.album = album
-        selectedIndexPath = indexPath
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        scrollToIndexPath()
     }
 
-    func updateBarTitle() {
-        navigationItem.title = "\(currentIndex) of \(viewModel.total)"
+    func configureGestures() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        view.addGestureRecognizer(tapGesture)
     }
-}
 
-extension DetailsVC: DetailsVCProtocol {
+    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+        navigationController?.navigationBar.isHidden.toggle()
+    }
+
+    func configureTitle() {
+        if viewModel.indexPath == nil {
+            viewModel.indexPath = IndexPath(row: 0, section: 0)
+        }
+
+        if let cell = collectionView.visibleCells.first, let currentIndexPath = collectionView.indexPath(for: cell) {
+            viewModel.indexPath = currentIndexPath
+        }
+
+        navigationItem.title = "\(viewModel.indexPath!.row + 1) of \(viewModel.total)"
+    }
+
+    func scrollToIndexPath() {
+        guard let indexPath = viewModel.indexPath else {
+            return
+        }
+
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+    }
+
     func fetchCompleted() {
         DispatchQueue.main.async { [weak self] in
-            self?.updateBarTitle()
             self?.collectionView.reloadData()
         }
     }
 
     func fetchFailed(with error: String) {
         //
+    }
+}
+
+extension DetailsVC: DetailVCProtocol {
+    func setup(_ viewModel: PhotosVMProtocol) {
+        self.viewModel = viewModel
     }
 }
 
@@ -73,25 +92,24 @@ extension DetailsVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? DetailsCell else {
+        configureTitle()
+
+        guard let cell = cell as? DetailsCell, let photo = viewModel.photo(at: indexPath.row) else {
             return
         }
 
-        if let photo = viewModel.photo(at: indexPath.row) {
-            cell.configure(photo)
-        }
-
-        updateBarTitle()
-        viewModel.prefetchIfNeeded(at: indexPath)
+        cell.configure(container: container, photo: photo)
     }
 
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if let cell = cell as? DetailsCell {
-            cell.cancel()
+        configureTitle()
+
+        guard let cell = cell as? DetailsCell else {
+            return
         }
 
-        updateBarTitle()
+        cell.didEndDisplaying()
     }
 }
 
@@ -101,8 +119,8 @@ extension DetailsVC: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
-        -> UICollectionViewCell {
-            return collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.identifier,
-                                                      for: indexPath)
+                        -> UICollectionViewCell {
+        configureTitle()
+        return collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.identifier, for: indexPath)
     }
 }

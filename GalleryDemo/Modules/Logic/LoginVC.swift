@@ -9,19 +9,16 @@
 import UIKit
 
 protocol LoginVCProtocol: AnyObject {
+    var viewModel: LoginVMProtocol! { get set }
+
     func showAlert(_ message: String)
 }
 
 final class LoginVC: UIViewController {
-    private var viewModel: LoginVMProtocol!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    var viewModel: LoginVMProtocol!
 
-        viewModel = LoginVM(viewController: self)
-    }
-
-    @IBAction func tapLoginButton(_ sender: UIButton) {
+    @IBAction private func tapLoginButton(_ sender: UIButton) {
         viewModel.login()
     }
 }

@@ -1,11 +1,11 @@
-////
-////  ApiResponse.swift
-////  GalleryDemo
-////
-////  Created by roman on 16/04/2019.
-////  Copyright © 2019 figma. All rights reserved.
-////
 //
+//  ApiResponse.swift
+//  GalleryDemo
+//
+//  Created by roman on 16/04/2019.
+//  Copyright © 2019 figma. All rights reserved.
+//
+
 import Foundation
 
 struct PhotosResponse: Codable {
@@ -32,20 +32,16 @@ struct PhotosResponse: Codable {
 
         private var thumb: String {
             var size = sizes.last!
-            for tmpSize in sizes {
-                if tmpSize.width > 200, tmpSize.width < size.width {
-                    size = tmpSize
-                }
+            for tmpSize in sizes where tmpSize.width > 200 && tmpSize.width < size.width {
+                size = tmpSize
             }
             return size.url
         }
 
         private var image: String {
             var size = sizes.last!
-            for tmpSize in sizes {
-                if tmpSize.width > 800, tmpSize.width < size.width {
-                    size = tmpSize
-                }
+            for tmpSize in sizes where tmpSize.width > 800 && tmpSize.width < size.width {
+                size = tmpSize
             }
             return size.url
         }

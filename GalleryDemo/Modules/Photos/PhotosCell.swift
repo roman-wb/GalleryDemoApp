@@ -7,22 +7,31 @@
 //
 
 import UIKit
+import Swinject
 
 final class PhotosCell: UICollectionViewCell {
+
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var thumbImageView: UIImageView!
 
+    private var container: Container!
+    private var photo: PhotosResponse.Photo!
+
     private var thumbURL: URL?
+    private var imageLoader: ImageLoaderProtocol?
 
-    private var imageLoader: ImageLoader?
+    func configure(container: Container, photo: PhotosResponse.Photo) {
+        self.container = container
+        self.photo = photo
 
-    func configure(_ photo: PhotosResponse.Photo) {
         thumbURL = photo.thumbURL
 
-        if let thumbURL = thumbURL {
-            imageLoader = ImageLoader(url: thumbURL, delegate: self)
-            imageLoader?.download()
+        guard let thumbURL = thumbURL else {
+            return
         }
+
+        imageLoader = container.resolve(ImageLoaderProtocol.self)!
+        imageLoader?.download(url: thumbURL, delegate: self)
     }
 
     func didEndDisplaying() {
@@ -31,7 +40,7 @@ final class PhotosCell: UICollectionViewCell {
 }
 
 extension PhotosCell: ImageLoaderDelegate {
-    func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL) {
+    func imageLoaderWillDownloading(imageLoader: ImageLoaderProtocol, url: URL) {
         guard thumbURL == url else {
             return
         }
@@ -42,7 +51,7 @@ extension PhotosCell: ImageLoaderDelegate {
         }
     }
 
-    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool) {
+    func imageLoaderDidDownloaded(imageLoader: ImageLoaderProtocol, url: URL, image: UIImage, fromCache: Bool) {
         guard thumbURL == url else {
             return
         }
@@ -53,7 +62,7 @@ extension PhotosCell: ImageLoaderDelegate {
         }
     }
 
-    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL) {
+    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoaderProtocol, url: URL) {
         guard thumbURL == url else {
             return
         }

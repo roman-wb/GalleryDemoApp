@@ -8,46 +8,36 @@
 
 import UIKit
 
+protocol ImageLoaderProtocol: AnyObject {
+    var cache: NSCache<NSString, UIImage>! { get set }
+
+    var url: URL! { get set }
+
+    func download(url: URL, delegate: ImageLoaderDelegate)
+
+    func cancel()
+}
+
 protocol ImageLoaderDelegate: AnyObject {
-    func imageLoaderWillDownloading(imageLoader: ImageLoader, url: URL)
+    func imageLoaderWillDownloading(imageLoader: ImageLoaderProtocol, url: URL)
 
-    func imageLoaderDidDownloaded(imageLoader: ImageLoader, url: URL, image: UIImage, fromCache: Bool)
+    func imageLoaderDidDownloaded(imageLoader: ImageLoaderProtocol, url: URL, image: UIImage, fromCache: Bool)
 
-    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoader, url: URL)
+    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoaderProtocol, url: URL)
 }
 
 final class ImageLoader {
-    var url: URL
 
-    weak var delegate: ImageLoaderDelegate?
+    var cache: NSCache<NSString, UIImage>!
+
+    var url: URL!
+
+    private weak var delegate: ImageLoaderDelegate?
 
     private var dataTask: URLSessionDataTask?
 
-    static var cache = NSCache<NSString, UIImage>()
-
     private var cacheKey: NSString {
         return url.relativeString as NSString
-    }
-
-    init(url: URL, delegate: ImageLoaderDelegate?) {
-        self.url = url
-        self.delegate = delegate
-    }
-
-    func download() {
-        delegate?.imageLoaderWillDownloading(imageLoader: self, url: url)
-
-        if let image = ImageLoader.cache.object(forKey: cacheKey) {
-            delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: image, fromCache: true)
-            return
-        }
-
-        dataTask = URLSession.shared.dataTask(with: url, completionHandler: completionHandler)
-        dataTask?.resume()
-    }
-
-    func cancel() {
-        dataTask?.cancel()
     }
 
     private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
@@ -62,8 +52,29 @@ final class ImageLoader {
                 return
         }
 
-        ImageLoader.cache.setObject(resizedImage, forKey: cacheKey)
+        cache.setObject(resizedImage, forKey: cacheKey)
 
         delegate?.imageLoaderDidDownloaded(imageLoader: self, url: url, image: resizedImage, fromCache: false)
+    }
+}
+
+extension ImageLoader: ImageLoaderProtocol {
+    func download(url: URL, delegate: ImageLoaderDelegate) {
+        self.url = url
+        self.delegate = delegate
+
+        delegate.imageLoaderWillDownloading(imageLoader: self, url: url)
+
+        if let image = cache.object(forKey: cacheKey) {
+            delegate.imageLoaderDidDownloaded(imageLoader: self, url: url, image: image, fromCache: true)
+            return
+        }
+
+        dataTask = URLSession.shared.dataTask(with: url, completionHandler: completionHandler)
+        dataTask?.resume()
+    }
+
+    func cancel() {
+        dataTask?.cancel()
     }
 }
