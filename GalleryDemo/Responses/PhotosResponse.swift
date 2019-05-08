@@ -19,11 +19,29 @@ struct PhotosResponse: Codable {
         var type: String
     }
 
+    struct Countable: Codable {
+        var count: Int
+    }
+
     struct Photo: Codable {
         var id: Int
+        var date: Int
+        var likes: Countable
+        var reposts: Countable
+        var comments: Countable
         var sizes: [Size]
+
         var thumbURL: URL?
         var imageURL: URL?
+        var likesCount: Int {
+            return likes.count
+        }
+        var repostsCount: Int {
+            return reposts.count
+        }
+        var commentsCount: Int {
+            return comments.count
+        }
 
         mutating func setup() {
             thumbURL = URL(string: thumb)

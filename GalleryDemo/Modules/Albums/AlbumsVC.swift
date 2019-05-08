@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyVK
 import Swinject
 
 protocol AlbumsVCProtocol: AnyObject {
@@ -43,6 +44,30 @@ final class AlbumsVC: UIViewController {
         configureProgressView()
 
         viewModel.fetch(isRefresh: false)
+
+
+        VK.API.Users.get([
+            .userId: "210700286",
+            .fields: "photo_50,has_photo"
+            ])
+            .onSuccess { data in
+                print(String(data: data, encoding: .utf8))
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let response = try! decoder.decode([UserResponse].self, from: data)
+
+               
+
+            }
+            .send()
+
+
+
+
+
+
+
+
     }
 
     private func configureLogoutButton() {

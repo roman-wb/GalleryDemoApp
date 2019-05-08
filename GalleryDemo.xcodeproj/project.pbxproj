@@ -24,6 +24,7 @@
 		302D33D6226A66D400593DD0 /* AlbumsProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */; };
 		302D33D8226A67E800593DD0 /* AlbumsProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */; };
 		302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */; };
+		3035785222833B9400B7C106 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3035785122833B9400B7C106 /* UserResponse.swift */; };
 		3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */; };
 		303D0A752266FBAD0099CCA5 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */; };
 		30481D04225005500087F242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30481D03225005500087F242 /* AppDelegate.swift */; };
@@ -61,6 +62,7 @@
 		302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumsProgressView.xib; sourceTree = "<group>"; };
 		302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsProgressView.swift; sourceTree = "<group>"; };
 		302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		3035785122833B9400B7C106 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		3039BFAF225CF24100599185 /* Gallery.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gallery.xcdatamodel; sourceTree = "<group>"; };
 		303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30481D00225005500087F242 /* GalleryDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -218,6 +220,7 @@
 			children = (
 				3064534E2265920F00D2B0D9 /* AlbumsResponse.swift */,
 				30113700226B867700894D04 /* PhotosResponse.swift */,
+				3035785122833B9400B7C106 /* UserResponse.swift */,
 			);
 			path = Responses;
 			sourceTree = "<group>";
@@ -308,8 +311,6 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyVK.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Swinject.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -335,6 +336,7 @@
 				30113707226B867700894D04 /* PhotosCell.swift in Sources */,
 				301136FD226B813700894D04 /* UICollectionView+Extension.swift in Sources */,
 				309281342253EC9800987F5B /* ImageLoader.swift in Sources */,
+				3035785222833B9400B7C106 /* UserResponse.swift in Sources */,
 				30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */,
 				309281302253D81B00987F5B /* AlbumsVM.swift in Sources */,
 				3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */,

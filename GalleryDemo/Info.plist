@@ -5,8 +5,12 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>vk6921197</key>
+			<key>CFBundleURLName</key>
 			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vk6921197</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
@@ -48,6 +52,8 @@
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>vk</string>
+		<string>vk-share</string>
 		<string>vkauthorize</string>
 		<string>vk6921197</string>
 	</array>

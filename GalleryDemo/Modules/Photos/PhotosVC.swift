@@ -43,6 +43,11 @@ final class PhotosVC: UIViewController {
 
     private var cellSize: CGSize!
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        navigationController?.navigationBar.barStyle = .default
+        return .default
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -79,8 +84,7 @@ final class PhotosVC: UIViewController {
             fatalError("Layout not inherit from UICollectionViewFlowLayout")
         }
 
-        let layoutWidth = view.safeAreaLayoutGuide.layoutFrame.width
-        let width = layoutWidth - layout.sectionInset.left - layout.sectionInset.right -
+        let width = view.frame.width - layout.sectionInset.left - layout.sectionInset.right -
             layout.minimumLineSpacing * (cellsInline - 1)
         let size = (width / cellsInline).rounded(.down)
         cellSize = CGSize(width: size, height: size)

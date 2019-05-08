@@ -4,3 +4,5 @@ identifier_name:
   excluded:
     - id
     - at
+force_cast: warning
+force_try: warning

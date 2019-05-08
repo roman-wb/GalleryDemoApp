@@ -37,19 +37,31 @@ final class DetailsCell: UICollectionViewCell {
 
     func setImage(_ image: UIImage) {
         imageView.image = image
-        scrollView.zoomScale = 1.0
 
-        let scale = (frame.width - 20) / image.size.width
-        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
-        imageView.frame = CGRect(origin: .zero, size: size)
-
-        scrollView.contentSize = size
-
+        updateZoom()
         updateInsets()
     }
 
     func didEndDisplaying() {
         imageLoader?.cancel()
+    }
+
+    func updateZoom() {
+        scrollView.zoomScale = 1.0
+
+        guard let image = imageView.image else { return }
+
+        var scale: CGFloat!
+        if frame.width < frame.height {
+            scale = (frame.width - 20) / image.size.width
+        } else {
+            scale = (frame.height - 20) / image.size.height
+        }
+
+        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+        imageView.frame = CGRect(origin: .zero, size: size)
+
+        scrollView.contentSize = size
     }
 
     func updateInsets() {

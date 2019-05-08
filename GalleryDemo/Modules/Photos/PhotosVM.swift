@@ -18,6 +18,8 @@ protocol PhotosVMProtocol {
 
     var photos: [PhotosResponse.Photo] { get }
 
+    var users: [String: UserResponse] { get }
+
     var count: Int { get }
 
     var total: Int { get }
@@ -43,6 +45,8 @@ final class PhotosVM {
 
     var album: AlbumsResponse.Album!
 
+    private(set) var users = [String: UserResponse]()
+
     private(set) var photos = [PhotosResponse.Photo]()
 
     private(set) var total = 0
@@ -56,6 +60,7 @@ final class PhotosVM {
                 .rev: "1",
                 .feedType: "photo",
                 .photoSizes: "1",
+                .extended: "1",
                 .count: String(perPage),
                 .offset: String(currentPage * perPage),
                 .ownerId: "-41238925"] // FIXME: Remove ownerId

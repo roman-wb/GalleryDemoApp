@@ -18,10 +18,19 @@ protocol DetailVCProtocol {
 final class DetailsVC: UIViewController {
 
     @IBOutlet private var collectionView: UICollectionView!
+    @IBOutlet private var bottomView: UIView!
+    @IBOutlet private var likesLabel: UILabel!
+    @IBOutlet private var repostsLabel: UILabel!
+    @IBOutlet private var commentsLabel: UILabel!
 
     var container: Container!
 
     var viewModel: PhotosVMProtocol!
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        navigationController?.navigationBar.barStyle = .black
+        return .lightContent
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +45,14 @@ final class DetailsVC: UIViewController {
         super.viewDidLayoutSubviews()
 
         scrollToIndexPath()
+
+        print(#function)
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        collectionView.reloadData()
     }
 
     func configureGestures() {
@@ -44,6 +61,7 @@ final class DetailsVC: UIViewController {
     }
 
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+        bottomView.isHidden.toggle()
         navigationController?.navigationBar.isHidden.toggle()
     }
 
@@ -57,6 +75,12 @@ final class DetailsVC: UIViewController {
         }
 
         navigationItem.title = "\(viewModel.indexPath!.row + 1) of \(viewModel.total)"
+
+        let photo = viewModel.photo(at: viewModel.indexPath!.row)!
+
+        likesLabel.text = String(photo.likesCount)
+        repostsLabel.text = String(photo.repostsCount)
+        commentsLabel.text = String(photo.commentsCount)
     }
 
     func scrollToIndexPath() {

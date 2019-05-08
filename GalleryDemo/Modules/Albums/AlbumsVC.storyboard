@@ -81,8 +81,8 @@
                         <constraints>
                             <constraint firstItem="CqV-sg-mb1" firstAttribute="top" secondItem="mj6-Ma-lay" secondAttribute="top" id="5Wf-Lg-fs4"/>
                             <constraint firstAttribute="bottom" secondItem="CqV-sg-mb1" secondAttribute="bottom" id="60G-ES-MZp"/>
-                            <constraint firstItem="CqV-sg-mb1" firstAttribute="leading" secondItem="mj6-Ma-lay" secondAttribute="leading" id="Ohc-gh-KRr"/>
-                            <constraint firstItem="mj6-Ma-lay" firstAttribute="trailing" secondItem="CqV-sg-mb1" secondAttribute="trailing" id="UrD-Ry-OFD"/>
+                            <constraint firstItem="CqV-sg-mb1" firstAttribute="leading" secondItem="b8c-Hr-y6h" secondAttribute="leading" id="Ohc-gh-KRr"/>
+                            <constraint firstAttribute="trailing" secondItem="CqV-sg-mb1" secondAttribute="trailing" id="UrD-Ry-OFD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mj6-Ma-lay"/>
                     </view>
