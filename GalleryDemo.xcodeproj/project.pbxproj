@@ -24,7 +24,7 @@
 		302D33D6226A66D400593DD0 /* AlbumsProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */; };
 		302D33D8226A67E800593DD0 /* AlbumsProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */; };
 		302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */; };
-		3035785222833B9400B7C106 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3035785122833B9400B7C106 /* UserResponse.swift */; };
+		3035785222833B9400B7C106 /* UserResponsable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3035785122833B9400B7C106 /* UserResponsable.swift */; };
 		3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */; };
 		303D0A752266FBAD0099CCA5 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */; };
 		30481D04225005500087F242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30481D03225005500087F242 /* AppDelegate.swift */; };
@@ -38,6 +38,7 @@
 		307F78C0226D930B00F3EDAA /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307F78BD226D930B00F3EDAA /* DetailsVC.swift */; };
 		307F78C2226DA38900F3EDAA /* DetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307F78C1226DA38900F3EDAA /* DetailsCell.swift */; };
 		3081F962226C99A900FB88D1 /* PhotosProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3081F961226C99A900FB88D1 /* PhotosProgressView.swift */; };
+		308BADC12289BCE5005E4E9A /* VKApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308BADC02289BCE5005E4E9A /* VKApi.swift */; };
 		309281302253D81B00987F5B /* AlbumsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3092812F2253D81B00987F5B /* AlbumsVM.swift */; };
 		309281342253EC9800987F5B /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309281332253EC9800987F5B /* ImageLoader.swift */; };
 		30E0136922807C4B00715206 /* Swinject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E0136822807C4B00715206 /* Swinject.framework */; };
@@ -62,7 +63,7 @@
 		302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumsProgressView.xib; sourceTree = "<group>"; };
 		302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsProgressView.swift; sourceTree = "<group>"; };
 		302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
-		3035785122833B9400B7C106 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
+		3035785122833B9400B7C106 /* UserResponsable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponsable.swift; sourceTree = "<group>"; };
 		3039BFAF225CF24100599185 /* Gallery.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gallery.xcdatamodel; sourceTree = "<group>"; };
 		303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30481D00225005500087F242 /* GalleryDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,6 +78,7 @@
 		307F78BD226D930B00F3EDAA /* DetailsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
 		307F78C1226DA38900F3EDAA /* DetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsCell.swift; sourceTree = "<group>"; };
 		3081F961226C99A900FB88D1 /* PhotosProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosProgressView.swift; sourceTree = "<group>"; };
+		308BADC02289BCE5005E4E9A /* VKApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKApi.swift; sourceTree = "<group>"; };
 		3092812F2253D81B00987F5B /* AlbumsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsVM.swift; sourceTree = "<group>"; };
 		309281332253EC9800987F5B /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		30E0136822807C4B00715206 /* Swinject.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swinject.framework; path = Carthage/Build/iOS/Swinject.framework; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 		30480B4022525DC9004D5993 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				308BADC02289BCE5005E4E9A /* VKApi.swift */,
 				3012100122525916009451E5 /* Logic */,
 				3012100222525921009451E5 /* Albums */,
 				301136FE226B85CC00894D04 /* Photos */,
@@ -220,7 +223,7 @@
 			children = (
 				3064534E2265920F00D2B0D9 /* AlbumsResponse.swift */,
 				30113700226B867700894D04 /* PhotosResponse.swift */,
-				3035785122833B9400B7C106 /* UserResponse.swift */,
+				3035785122833B9400B7C106 /* UserResponsable.swift */,
 			);
 			path = Responses;
 			sourceTree = "<group>";
@@ -336,7 +339,7 @@
 				30113707226B867700894D04 /* PhotosCell.swift in Sources */,
 				301136FD226B813700894D04 /* UICollectionView+Extension.swift in Sources */,
 				309281342253EC9800987F5B /* ImageLoader.swift in Sources */,
-				3035785222833B9400B7C106 /* UserResponse.swift in Sources */,
+				3035785222833B9400B7C106 /* UserResponsable.swift in Sources */,
 				30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */,
 				309281302253D81B00987F5B /* AlbumsVM.swift in Sources */,
 				3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */,
@@ -345,6 +348,7 @@
 				30113708226B867700894D04 /* PhotosVC.swift in Sources */,
 				30120FE822520B05009451E5 /* LoginVC.swift in Sources */,
 				307B4F5A2281638800D99FA7 /* LoginVM.swift in Sources */,
+				308BADC12289BCE5005E4E9A /* VKApi.swift in Sources */,
 				302D33D8226A67E800593DD0 /* AlbumsProgressView.swift in Sources */,
 				3064534F2265920F00D2B0D9 /* AlbumsResponse.swift in Sources */,
 				3012100022525909009451E5 /* AlbumsCell.swift in Sources */,

@@ -11,16 +11,13 @@ import Swinject
 
 protocol PhotosVCProtocol: AnyObject {
     var container: Container! { get set }
-
     var viewModel: PhotosVMProtocol! { get set }
 
     func showProgressIndicator()
-
     func showProgressMessage(_ message: String)
 
     func fetchCompleted()
-
-    func fetchFailed(with: String)
+    func fetchFailed()
 }
 
 final class PhotosVC: UIViewController {
@@ -28,24 +25,26 @@ final class PhotosVC: UIViewController {
     @IBOutlet private var collectionView: UICollectionView!
 
     var container: Container!
-
     var viewModel: PhotosVMProtocol!
 
     private var refreshControl: UIRefreshControl!
-
     private var isRefreshFinishing = false
-
     private var progressView: PhotosProgressView!
+    private var cellSize: CGSize!
 
     private var cellsInline: CGFloat {
         return UIDevice.current.orientation.isPortrait ? 4 : 5
     }
 
-    private var cellSize: CGSize!
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.isHidden = false
         return .default
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return false
     }
 
     override func viewDidLoad() {
@@ -151,7 +150,7 @@ extension PhotosVC: PhotosVCProtocol {
         }
     }
 
-    func fetchFailed(with error: String) {
+    func fetchFailed() {
         DispatchQueue.main.async { [weak self] in
             self?.stopRefreshing()
         }
@@ -201,7 +200,6 @@ extension PhotosVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
         -> UICollectionViewCell {
-            return collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCell.identifier,
-                                                      for: indexPath)
+            return collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCell.identifier, for: indexPath)
     }
 }

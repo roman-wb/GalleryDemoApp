@@ -7,71 +7,51 @@
 //
 
 import UIKit
-import SwiftyVK
 import Swinject
 
 protocol AlbumsVCProtocol: AnyObject {
+    var api: VKApi! { get set }
     var container: Container! { get set }
-
     var viewModel: AlbumsVMProtocol! { get set }
 
     func showProgressIndicator()
-
     func showProgressMessage(_ message: String)
 
     func fetchCompleted()
-
-    func fetchFailed(with: String)
+    func fetchFailed()
 }
 
 final class AlbumsVC: UIViewController {
 
     @IBOutlet private var tableView: UITableView!
 
+    var api: VKApi!
     var container: Container!
-
     var viewModel: AlbumsVMProtocol!
 
     private var refreshControl: UIRefreshControl!
-
     private var isRefreshFinishing = false
-
     private var progressView: AlbumsProgressView!
 
     override func viewDidLoad() {
-        configureLogoutButton()
         configureRefreshControl()
         configureProgressView()
 
-        viewModel.fetch(isRefresh: false)
-
-
-        VK.API.Users.get([
-            .userId: "210700286",
-            .fields: "photo_50,has_photo"
-            ])
-            .onSuccess { data in
-                print(String(data: data, encoding: .utf8))
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let response = try! decoder.decode([UserResponse].self, from: data)
-
-               
-
+        viewModel.loading { result in
+            DispatchQueue.main.async { [weak self] in
+                switch result {
+                case .success:
+                    self?.configureLogoutButton()
+                    self?.viewModel.fetch(isRefresh: false)
+                default:
+                    fatalError("Not load current user!")
+                }
             }
-            .send()
-
-
-
-
-
-
-
-
+        }
     }
 
     private func configureLogoutButton() {
-        let button = UIBarButtonItem(title: "Logout",
+        let button = UIBarButtonItem(title: "Logout \(api.user.name)",
                                      style: .done,
                                      target: self,
                                      action: #selector(tapLogoutButton(_:)))
@@ -138,7 +118,7 @@ extension AlbumsVC: AlbumsVCProtocol {
         }
     }
 
-    func fetchFailed(with error: String) {
+    func fetchFailed() {
         DispatchQueue.main.async { [weak self] in
             self?.stopRefreshing()
         }

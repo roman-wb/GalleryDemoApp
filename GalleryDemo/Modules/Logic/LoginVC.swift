@@ -15,7 +15,6 @@ protocol LoginVCProtocol: AnyObject {
 }
 
 final class LoginVC: UIViewController {
-
     var viewModel: LoginVMProtocol!
 
     @IBAction private func tapLoginButton(_ sender: UIButton) {

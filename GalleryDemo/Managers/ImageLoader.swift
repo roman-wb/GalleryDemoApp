@@ -9,32 +9,26 @@
 import UIKit
 
 protocol ImageLoaderProtocol: AnyObject {
+    var url: URL! { get set }
     var cache: NSCache<NSString, UIImage>! { get set }
 
-    var url: URL! { get set }
-
     func download(url: URL, delegate: ImageLoaderDelegate)
-
     func cancel()
 }
 
 protocol ImageLoaderDelegate: AnyObject {
     func imageLoaderWillDownloading(imageLoader: ImageLoaderProtocol, url: URL)
-
     func imageLoaderDidDownloaded(imageLoader: ImageLoaderProtocol, url: URL, image: UIImage, fromCache: Bool)
-
     func imageLoaderDidDownloadedWithError(imageLoader: ImageLoaderProtocol, url: URL)
 }
 
 final class ImageLoader {
 
+    var url: URL!
     var cache: NSCache<NSString, UIImage>!
 
-    var url: URL!
-
-    private weak var delegate: ImageLoaderDelegate?
-
     private var dataTask: URLSessionDataTask?
+    private weak var delegate: ImageLoaderDelegate?
 
     private var cacheKey: NSString {
         return url.relativeString as NSString

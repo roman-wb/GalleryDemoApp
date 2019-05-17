@@ -10,20 +10,18 @@ import UIKit
 import SwiftyVK
 
 protocol AlbumsVMProtocol: AnyObject {
+    var api: VKApi! { get set }
     var viewController: AlbumsVCProtocol! { get set }
 
+    var count: Int { get }
     var inProgress: Bool { get }
-
     var isFinished: Bool { get }
 
-    var count: Int { get }
-
     func logout()
-
+    func loading(completionHandler: @escaping (Result<UserResponse, VKApiError>) -> Void)
     func album(at: Int) -> AlbumsResponse.Album?
 
     func fetch(isRefresh: Bool)
-
     func fetchIfNeeded(at indexPath: IndexPath)
 }
 
@@ -31,20 +29,24 @@ final class AlbumsVM {
 
     private let perPage = 30
 
+    var api: VKApi!
     weak var viewController: AlbumsVCProtocol!
 
-    private var albums = [AlbumsResponse.Album]()
+    var albums = [AlbumsResponse.Album]()
+
+    var count: Int {
+        return albums.count
+    }
 
     private(set) var inProgress = false
-
     private(set) var isFinished = false
 
     private var parameters: Parameters {
-        return [.needCovers: "1",
+        return [.ownerId: String(api.user.ownerId),
+                .needCovers: "1",
                 .photoSizes: "1",
                 .offset: String(currentPage * perPage),
-                .count: String(perPage),
-                .ownerId: "-41238925"] // FIXME: Remove ownerId
+                .count: String(perPage)]
     }
 
     private var currentPage: Int {
@@ -53,8 +55,8 @@ final class AlbumsVM {
 }
 
 extension AlbumsVM: AlbumsVMProtocol {
-    var count: Int {
-        return albums.count
+    func loading(completionHandler: @escaping (Result<UserResponse, VKApiError>) -> Void) {
+        api.getMe { completionHandler($0) }
     }
 
     func logout() {
@@ -80,14 +82,22 @@ extension AlbumsVM: AlbumsVMProtocol {
             return
         }
 
-        viewController?.showProgressIndicator()
+        viewController.showProgressIndicator()
 
         inProgress = true
 
-        VK.API.Photos.getAlbums(parameters)
-            .onSuccess(onSuccess)
-            .onError(onError)
-            .send()
+        api.getAlbums(parameters) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.onSuccess(response)
+            case .failure(.decoder):
+                self?.onError(message: "Unknown response from API")
+            case .failure(.response):
+                self?.onError(message: "No internet connection")
+            default:
+                self?.onError(message: "Unknown error")
+            }
+        }
     }
 
     func fetchIfNeeded(at indexPath: IndexPath) {
@@ -98,14 +108,7 @@ extension AlbumsVM: AlbumsVMProtocol {
         fetch(isRefresh: false)
     }
 
-    private func onSuccess(_ data: Data) {
-        guard let response = try? JSONDecoder().decode(AlbumsResponse.self, from: data) else {
-            viewController?.showProgressMessage("Unknown response from API")
-            viewController?.fetchFailed(with: "Unknown response from API")
-            inProgress = false
-            return
-        }
-
+    private func onSuccess(_ response: AlbumsResponse) {
         for var album in response.items {
             album.setup()
             albums.append(album)
@@ -115,20 +118,20 @@ extension AlbumsVM: AlbumsVMProtocol {
 
         if isFinished {
             if count > 0 {
-                viewController?.showProgressMessage("\(count) photos")
+                viewController.showProgressMessage("\(count) albums")
             } else {
-                viewController?.showProgressMessage("Photos not found")
+                viewController.showProgressMessage("Albums not found")
             }
         }
 
-        viewController?.fetchCompleted()
+        viewController.fetchCompleted()
 
         inProgress = false
     }
 
-    private func onError(error: VKError) {
-        viewController?.showProgressMessage("No internet connection")
-        viewController?.fetchFailed(with: "No internet connection")
+    private func onError(message: String) {
+        viewController.showProgressMessage(message)
+        viewController.fetchFailed()
 
         inProgress = false
     }

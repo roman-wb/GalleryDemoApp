@@ -13,8 +13,11 @@ struct UserResponse: Codable {
     var firstName: String
     var lastName: String
     var hasPhoto: Int
-    
-    var fullname: String {
+
+    var ownerId: Int {
+        return -35486195 // id
+    }
+    var name: String {
         return "\(lastName) \(firstName)"
     }
     var isPhoto: Bool {

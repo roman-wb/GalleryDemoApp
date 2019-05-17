@@ -66,6 +66,9 @@ extension AppDelegate {
     func buildContainer() {
         let container = Container()
 
+        // AppDelegate
+        container.register(AppDelegate.self) { _ in self }
+
         // Login
         container.register(LoginVC.self) { resovler in
             let loginVC = LoginVC.storyboardInstance()
@@ -85,11 +88,16 @@ extension AppDelegate {
         container.register(AlbumsVC.self) { resovler in
             let albumsVC = AlbumsVC.storyboardInstance()
             albumsVC.container = container
+            albumsVC.api = resovler.resolve(VKApi.self)!
             albumsVC.viewModel = resovler.resolve(AlbumsVMProtocol.self)!
             albumsVC.viewModel.viewController = albumsVC
             return albumsVC
         }
-        container.register(AlbumsVMProtocol.self) { _ in AlbumsVM() }
+        container.register(AlbumsVMProtocol.self) { resovler in
+            let albumsVM = AlbumsVM()
+            albumsVM.api = resovler.resolve(VKApi.self)!
+            return albumsVM
+        }
 
         // Photos
         container.register(PhotosVC.self) { (resovler, album: AlbumsResponse.Album) -> PhotosVC in
@@ -100,7 +108,11 @@ extension AppDelegate {
             photosVC.viewModel.album = album
             return photosVC
         }
-        container.register(PhotosVMProtocol.self) { _ in PhotosVM() }
+        container.register(PhotosVMProtocol.self) { resovler in
+            let photosVM = PhotosVM()
+            photosVM.api = resovler.resolve(VKApi.self)!
+            return photosVM
+        }
 
         // Details
         container.register(DetailsVC.self) { (_, photosVM: PhotosVMProtocol!) -> DetailsVC in
@@ -121,6 +133,9 @@ extension AppDelegate {
         container.register(NSCache.self, name: "Image") { _ in
             return NSCache<NSString, UIImage>()
         }.inObjectScope(.container)
+
+        // VKApi
+        container.register(VKApi.self) { _ in VKApi() }.inObjectScope(.container)
 
         self.container = container
     }

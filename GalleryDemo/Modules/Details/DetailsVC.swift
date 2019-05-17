@@ -11,24 +11,31 @@ import Swinject
 
 protocol DetailVCProtocol {
     var container: Container! { get set }
-
     var viewModel: PhotosVMProtocol! { get set }
 }
 
 final class DetailsVC: UIViewController {
 
     @IBOutlet private var collectionView: UICollectionView!
+
     @IBOutlet private var bottomView: UIView!
     @IBOutlet private var likesLabel: UILabel!
     @IBOutlet private var repostsLabel: UILabel!
     @IBOutlet private var commentsLabel: UILabel!
+    @IBOutlet private var profileLabel: UILabel!
+    @IBOutlet private var avatarImageView: UIImageView!
 
     var container: Container!
-
     var viewModel: PhotosVMProtocol!
 
+    private var statusBarHidden = false
+
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
+    }
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        navigationController?.navigationBar.barStyle = .black
+        configureNavigationBar()
         return .lightContent
     }
 
@@ -36,17 +43,13 @@ final class DetailsVC: UIViewController {
         super.viewDidLoad()
 
         configureGestures()
-        configureTitle()
-
-        viewModel.fetch(isRefresh: false)
+        configureFields()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         scrollToIndexPath()
-
-        print(#function)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -55,17 +58,18 @@ final class DetailsVC: UIViewController {
         collectionView.reloadData()
     }
 
+    func configureNavigationBar() {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.isHidden = false
+    }
+
     func configureGestures() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toggleBars(_:)))
         view.addGestureRecognizer(tapGesture)
     }
 
-    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
-        bottomView.isHidden.toggle()
-        navigationController?.navigationBar.isHidden.toggle()
-    }
-
-    func configureTitle() {
+    func updateIndexPath() {
         if viewModel.indexPath == nil {
             viewModel.indexPath = IndexPath(row: 0, section: 0)
         }
@@ -73,14 +77,33 @@ final class DetailsVC: UIViewController {
         if let cell = collectionView.visibleCells.first, let currentIndexPath = collectionView.indexPath(for: cell) {
             viewModel.indexPath = currentIndexPath
         }
+    }
 
-        navigationItem.title = "\(viewModel.indexPath!.row + 1) of \(viewModel.total)"
+    func configureFields() {
+        updateIndexPath()
 
-        let photo = viewModel.photo(at: viewModel.indexPath!.row)!
+        let photo = viewModel.photo(at: viewModel.indexPath.row)!
+
+        navigationItem.title = "\(viewModel.currentIndex) of \(viewModel.total)"
 
         likesLabel.text = String(photo.likesCount)
         repostsLabel.text = String(photo.repostsCount)
         commentsLabel.text = String(photo.commentsCount)
+
+        if let userId = photo.userId, let user = viewModel.users[userId] {
+            profileLabel.text = user.name
+        } else if let user = viewModel.users[photo.ownerId] {
+            profileLabel.text = user.name
+        } else {
+            profileLabel.text = viewModel.album.title
+        }
+    }
+
+    @objc func toggleBars(_ gesture: UITapGestureRecognizer) {
+        statusBarHidden.toggle()
+        setNeedsStatusBarAppearanceUpdate()
+        navigationController?.navigationBar.isHidden = statusBarHidden
+        bottomView.isHidden = statusBarHidden
     }
 
     func scrollToIndexPath() {
@@ -116,7 +139,7 @@ extension DetailsVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        configureTitle()
+        configureFields()
 
         guard let cell = cell as? DetailsCell, let photo = viewModel.photo(at: indexPath.row) else {
             return
@@ -127,7 +150,7 @@ extension DetailsVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        configureTitle()
+        configureFields()
 
         guard let cell = cell as? DetailsCell else {
             return
@@ -144,7 +167,7 @@ extension DetailsVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
                         -> UICollectionViewCell {
-        configureTitle()
+        configureFields()
         return collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.identifier, for: indexPath)
     }
 }

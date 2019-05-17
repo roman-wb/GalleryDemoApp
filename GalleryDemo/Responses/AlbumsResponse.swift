@@ -21,20 +21,23 @@ struct AlbumsResponse: Codable {
 
     struct Album: Codable {
         var id: Int
+        var ownerId: Int
         var title: String
         var sizes: [Size]
         var thumbURL: URL?
 
         mutating func setup() {
-            thumbURL = URL(string: thumb)
+            thumbURL = getImage(200)
         }
 
-        private var thumb: String {
-            var size = sizes.last!
-            for tmpSize in sizes where tmpSize.width > 800 && tmpSize.width < size.width {
+        private func getImage(_ width: Int) -> URL? {
+            guard var size = sizes.last else { return nil }
+
+            for tmpSize in sizes where tmpSize.width > width && tmpSize.width < size.width {
                 size = tmpSize
             }
-            return size.src
+
+            return URL(string: size.src)
         }
     }
 }

@@ -9,11 +9,50 @@
 import UIKit
 import Swinject
 
+class WebImageView: UIImageView {
+
+    private var url: URL!
+    private var cache: NSCache<NSString, UIImage>!
+    private var dataTask: URLSessionDataTask?
+
+    private var cacheKey: NSString {
+        return url.relativeString as NSString
+    }
+
+    func setImage(url: URL) {
+        self.url = url
+
+        dataTask?.cancel()
+
+        if let image = cache.object(forKey: cacheKey) {
+            self.image = image
+            return
+        }
+
+        dataTask = URLSession.shared.dataTask(with: url, completionHandler: completionHandler)
+        dataTask?.resume()
+    }
+
+    private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
+        guard
+            error == nil,
+            let data = data,
+            let image = UIImage(data: data),
+            let resizedImage = image.resize(CGSize(width: 800, height: 800)) else {
+                return
+        }
+
+        self.image = resizedImage
+
+        cache.setObject(resizedImage, forKey: cacheKey)
+    }
+}
+
 final class DetailsCell: UICollectionViewCell {
 
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private var imageView: WebImageView!
 
     private var container: Container!
     private var photo: PhotosResponse.Photo!
@@ -51,16 +90,12 @@ final class DetailsCell: UICollectionViewCell {
 
         guard let image = imageView.image else { return }
 
-        var scale: CGFloat!
-        if frame.width < frame.height {
-            scale = (frame.width - 20) / image.size.width
-        } else {
-            scale = (frame.height - 20) / image.size.height
-        }
-
+        let widthRatio = (frame.width - 20) / image.size.width
+        let heightRatio = (frame.height - 20) / image.size.height
+        let scale = min(widthRatio, heightRatio)
         let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
-        imageView.frame = CGRect(origin: .zero, size: size)
 
+        imageView.frame = CGRect(origin: .zero, size: size)
         scrollView.contentSize = size
     }
 

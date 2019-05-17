@@ -7,75 +7,54 @@
 //
 
 import UIKit
-import SwiftyVK
 
 protocol PhotosVMProtocol {
-    var viewController: PhotosVCProtocol? { get set }
+    var api: VKApi! { get set }
+    var viewController: PhotosVCProtocol! { get set }
 
-    var indexPath: IndexPath? { get set }
-
+    var indexPath: IndexPath! { get set }
     var album: AlbumsResponse.Album! { get set }
+    var photos: [PhotosResponse.Photo] { get set }
+    var users: [Int: UserResponse] { get set }
 
-    var photos: [PhotosResponse.Photo] { get }
-
-    var users: [String: UserResponse] { get }
-
+    var currentIndex: Int { get }
     var count: Int { get }
-
     var total: Int { get }
 
     var inProgress: Bool { get }
-
     var isFinished: Bool { get }
 
     func photo(at index: Int) -> PhotosResponse.Photo?
-
     func fetch(isRefresh: Bool)
-
     func fetchIfNeeded(at indexPath: IndexPath)
 }
 
 final class PhotosVM {
 
-    private let perPage = 100
+    let perPage = 100
 
-    weak var viewController: PhotosVCProtocol?
+    var api: VKApi!
+    weak var viewController: PhotosVCProtocol!
 
-    var indexPath: IndexPath?
-
+    var indexPath: IndexPath!
     var album: AlbumsResponse.Album!
+    var photos = [PhotosResponse.Photo]()
+    var users = [Int: UserResponse]()
 
-    private(set) var users = [String: UserResponse]()
-
-    private(set) var photos = [PhotosResponse.Photo]()
-
-    private(set) var total = 0
-
-    private(set) var inProgress = false
-
-    private(set) var isFinished = false
-
-    private var parameters: Parameters {
-        return [.albumId: String(album.id),
-                .rev: "1",
-                .feedType: "photo",
-                .photoSizes: "1",
-                .extended: "1",
-                .count: String(perPage),
-                .offset: String(currentPage * perPage),
-                .ownerId: "-41238925"] // FIXME: Remove ownerId
+    var currentIndex: Int {
+        return indexPath.row + 1
     }
 
-    private var currentPage: Int {
-        return count / perPage
-    }
-}
-
-extension PhotosVM: PhotosVMProtocol {
     var count: Int {
         return photos.count
     }
 
+    private(set) var total = 0
+    private(set) var inProgress = false
+    private(set) var isFinished = false
+}
+
+extension PhotosVM: PhotosVMProtocol {
     func photo(at index: Int) -> PhotosResponse.Photo? {
         guard photos.indices.contains(index) else {
             return nil
@@ -98,10 +77,20 @@ extension PhotosVM: PhotosVMProtocol {
 
         inProgress = true
 
-        VK.API.Photos.get(parameters)
-            .onSuccess(onSuccess)
-            .onError(onError)
-            .send()
+        api.getPhotos(album, perPage, count) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let response):
+                self.onSuccess(response)
+            case .failure(.decoder):
+                self.onError(message: "Unknown response from API")
+            case .failure(.response):
+                self.onError(message: "No internet connection")
+            default:
+                self.onError(message: "Unknown error")
+            }
+        }
     }
 
     func fetchIfNeeded(at indexPath: IndexPath) {
@@ -112,39 +101,30 @@ extension PhotosVM: PhotosVMProtocol {
         fetch(isRefresh: false)
     }
 
-    private func onSuccess(_ data: Data) {
-        guard let response = try? JSONDecoder().decode(PhotosResponse.self, from: data) else {
-            viewController?.showProgressMessage("Unknown response from API")
-            viewController?.fetchFailed(with: "Unknown response from API")
-            inProgress = false
-            return
-        }
+    private func onSuccess(_ response: (photos: PhotosResponse, users: [Int: UserResponse])) {
+        users.merge(response.users) { current, _ in current }
+        photos.append(contentsOf: response.photos.items)
 
-        total = response.count
-
-        for var photo in response.items {
-            photo.setup()
-            photos.append(photo)
-        }
+        total = response.photos.count
 
         isFinished = total == count
 
         if isFinished {
             if count > 0 {
-                viewController?.showProgressMessage("\(total) photos")
+                viewController.showProgressMessage("\(total) photos")
             } else {
-                viewController?.showProgressMessage("Photos not found")
+                viewController.showProgressMessage("Photos not found")
             }
         }
 
-        viewController?.fetchCompleted()
+        viewController.fetchCompleted()
 
         inProgress = false
     }
 
-    private func onError(error: VKError) {
-        viewController?.showProgressMessage("No internet connection")
-        viewController?.fetchFailed(with: "No internet connection")
+    private func onError(message: String) {
+        viewController.showProgressMessage(message)
+        viewController.fetchFailed()
 
         inProgress = false
     }
