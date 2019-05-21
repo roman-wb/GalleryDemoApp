@@ -101,7 +101,7 @@ final class AlbumsVC: UIViewController {
 extension AlbumsVC: AlbumsVCProtocol {
     func showProgressIndicator() {
         DispatchQueue.main.async { [weak self] in
-            self?.progressView.showIndicator()
+            self?.progressView.showActivityIndicator()
         }
     }
 
@@ -143,14 +143,6 @@ extension AlbumsVC: UITableViewDelegate {
         }
 
         cell.configure(container: container, album: album)
-    }
-
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let cell = cell as? AlbumsCell else {
-            return
-        }
-
-        cell.didEndDisplaying()
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

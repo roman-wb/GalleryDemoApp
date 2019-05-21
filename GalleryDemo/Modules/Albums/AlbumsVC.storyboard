@@ -29,7 +29,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oNv-3S-EM7">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oNv-3S-EM7" customClass="WebImageView" customModule="GalleryDemo" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -46,14 +46,9 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qx4-Ej-q6w">
-                                                    <rect key="frame" x="197" y="65" width="20" height="20"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="qx4-Ej-q6w" firstAttribute="centerX" secondItem="0xQ-Dg-4R5" secondAttribute="centerX" id="1uq-Je-YYO"/>
                                                 <constraint firstAttribute="trailing" secondItem="oNv-3S-EM7" secondAttribute="trailing" id="FNc-Uy-0PW"/>
-                                                <constraint firstItem="qx4-Ej-q6w" firstAttribute="centerY" secondItem="0xQ-Dg-4R5" secondAttribute="centerY" constant="-25" id="YlO-uo-qjO"/>
                                                 <constraint firstItem="oNv-3S-EM7" firstAttribute="leading" secondItem="0xQ-Dg-4R5" secondAttribute="leading" id="tSi-v9-aw8"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -65,8 +60,7 @@
                                             <constraint firstItem="oNv-3S-EM7" firstAttribute="centerX" secondItem="dhI-5U-oGh" secondAttribute="centerX" id="uUH-DB-9Nk"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="activityIndicatorView" destination="qx4-Ej-q6w" id="D1b-4o-PMG"/>
-                                            <outlet property="thumbImageView" destination="oNv-3S-EM7" id="ayM-Ey-sHP"/>
+                                            <outlet property="thumbImageView" destination="oNv-3S-EM7" id="lAA-uT-Osb"/>
                                             <outlet property="titleLabel" destination="Uug-cL-1gJ" id="GjL-Wq-9Pf"/>
                                         </connections>
                                     </tableViewCell>

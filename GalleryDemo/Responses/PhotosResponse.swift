@@ -25,6 +25,7 @@ struct PhotosResponse: Codable {
 
     struct Photo: Codable {
         var id: Int
+        var albumId: Int
         var ownerId: Int
         var userId: Int?
         var date: Int
@@ -33,9 +34,12 @@ struct PhotosResponse: Codable {
         var comments: Countable
         var sizes: [Size]
 
-        var thumbURL: URL?
-        var imageURL: URL?
-
+        var thumbURL: URL? {
+            return getImageURL(200)
+        }
+        var imageURL: URL? {
+            return getImageURL(800)
+        }
         var likesCount: Int {
             return likes.count
         }
@@ -46,12 +50,7 @@ struct PhotosResponse: Codable {
             return comments.count
         }
 
-        mutating func setup() {
-            thumbURL = getImage(200)
-            imageURL = getImage(800)
-        }
-
-        private func getImage(_ width: Int) -> URL? {
+        private func getImageURL(_ width: Int) -> URL? {
             guard var size = sizes.last else { return nil }
 
             for tmpSize in sizes where tmpSize.width > width && tmpSize.width < size.width {

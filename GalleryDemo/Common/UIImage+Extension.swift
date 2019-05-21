@@ -9,6 +9,17 @@
 import UIKit
 
 extension UIImage {
+
+    convenience init?(data: Data, resize: CGSize) {
+        guard
+            let image = UIImage(data: data),
+            let resizedImage = image.resize(resize),
+            let resizedData = resizedImage.jpegData(compressionQuality: 1) else {
+                return nil
+        }
+        self.init(data: resizedData)
+    }
+
     func resize(_ resize: CGSize, opaque: Bool = true) -> UIImage? {
         let widthRatio = resize.width / size.width
         let heightRatio = resize.height / size.height
@@ -20,7 +31,7 @@ extension UIImage {
             newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
         }
 
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        let rect = CGRect(origin: .zero, size: newSize)
 
         UIGraphicsBeginImageContextWithOptions(newSize, opaque, 1.0)
         draw(in: rect)

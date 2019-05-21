@@ -38,7 +38,7 @@
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="indicator" destination="zWf-gp-gJF" id="a7f-zk-YbS"/>
+                <outlet property="activityIndicatorView" destination="zWf-gp-gJF" id="GR6-bv-Jnf"/>
                 <outlet property="label" destination="Hqr-Jd-Iba" id="Og2-yQ-tVV"/>
             </connections>
             <point key="canvasLocation" x="145.6521739130435" y="175.44642857142856"/>

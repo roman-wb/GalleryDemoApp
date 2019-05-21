@@ -122,18 +122,6 @@ extension AppDelegate {
             return detailsVC
         }
 
-        // ImageLoader
-        container.register(ImageLoaderProtocol.self) { resovler in
-            let imageLoader = ImageLoader()
-            imageLoader.cache = resovler.resolve(NSCache.self, name: "Image")
-            return imageLoader
-        }
-
-        // Cache
-        container.register(NSCache.self, name: "Image") { _ in
-            return NSCache<NSString, UIImage>()
-        }.inObjectScope(.container)
-
         // VKApi
         container.register(VKApi.self) { _ in VKApi() }.inObjectScope(.container)
 

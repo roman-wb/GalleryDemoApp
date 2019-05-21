@@ -10,19 +10,19 @@ import UIKit
 
 final class PhotosProgressView: UICollectionReusableView {
 
-    @IBOutlet private var indicator: UIActivityIndicatorView!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var label: UILabel!
 
     func showIndicator() {
-        indicator.startAnimating()
-        indicator.isHidden = false
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
         label.isHidden = true
     }
 
     func showLabel(_ text: String) {
         label.isHidden = false
         label.text = text
-        indicator.stopAnimating()
-        indicator.isHidden = true
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
     }
 }

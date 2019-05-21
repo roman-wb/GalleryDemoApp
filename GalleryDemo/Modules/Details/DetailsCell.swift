@@ -9,80 +9,22 @@
 import UIKit
 import Swinject
 
-class WebImageView: UIImageView {
-
-    private var url: URL!
-    private var cache: NSCache<NSString, UIImage>!
-    private var dataTask: URLSessionDataTask?
-
-    private var cacheKey: NSString {
-        return url.relativeString as NSString
-    }
-
-    func setImage(url: URL) {
-        self.url = url
-
-        dataTask?.cancel()
-
-        if let image = cache.object(forKey: cacheKey) {
-            self.image = image
-            return
-        }
-
-        dataTask = URLSession.shared.dataTask(with: url, completionHandler: completionHandler)
-        dataTask?.resume()
-    }
-
-    private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
-        guard
-            error == nil,
-            let data = data,
-            let image = UIImage(data: data),
-            let resizedImage = image.resize(CGSize(width: 800, height: 800)) else {
-                return
-        }
-
-        self.image = resizedImage
-
-        cache.setObject(resizedImage, forKey: cacheKey)
-    }
-}
-
 final class DetailsCell: UICollectionViewCell {
 
-    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: WebImageView!
 
     private var container: Container!
     private var photo: PhotosResponse.Photo!
 
-    private var imageURL: URL?
-    private var imageLoader: ImageLoaderProtocol?
-
     func configure(container: Container, photo: PhotosResponse.Photo) {
         self.container = container
         self.photo = photo
 
-        imageURL = photo.imageURL
-
-        guard let imageURL = imageURL else {
-            return
+        imageView.setImage(url: photo.thumbURL) { [weak self] in
+            self?.updateZoom()
+            self?.updateInsets()
         }
-
-        imageLoader = container.resolve(ImageLoaderProtocol.self)!
-        imageLoader?.download(url: imageURL, delegate: self)
-    }
-
-    func setImage(_ image: UIImage) {
-        imageView.image = image
-
-        updateZoom()
-        updateInsets()
-    }
-
-    func didEndDisplaying() {
-        imageLoader?.cancel()
     }
 
     func updateZoom() {
@@ -117,37 +59,5 @@ extension DetailsCell: UIScrollViewDelegate {
 
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         updateInsets()
-    }
-}
-
-extension DetailsCell: ImageLoaderDelegate {
-    func imageLoaderWillDownloading(imageLoader: ImageLoaderProtocol, url: URL) {
-        guard imageURL == url else {
-            return
-        }
-
-        DispatchQueue.main.async { [weak self] in
-            self?.imageView.image = nil
-            self?.activityIndicatorView.startAnimating()
-        }
-    }
-
-    func imageLoaderDidDownloaded(imageLoader: ImageLoaderProtocol, url: URL, image: UIImage, fromCache: Bool) {
-        guard imageURL == url else {
-            return
-        }
-
-        DispatchQueue.main.async { [weak self] in
-            self?.setImage(image)
-            self?.activityIndicatorView.stopAnimating()
-        }
-    }
-
-    func imageLoaderDidDownloadedWithError(imageLoader: ImageLoaderProtocol, url: URL) {
-        guard imageURL == url else {
-            return
-        }
-
-        //
     }
 }

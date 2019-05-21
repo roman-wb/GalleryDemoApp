@@ -40,7 +40,7 @@
 		3081F962226C99A900FB88D1 /* PhotosProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3081F961226C99A900FB88D1 /* PhotosProgressView.swift */; };
 		308BADC12289BCE5005E4E9A /* VKApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308BADC02289BCE5005E4E9A /* VKApi.swift */; };
 		309281302253D81B00987F5B /* AlbumsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3092812F2253D81B00987F5B /* AlbumsVM.swift */; };
-		309281342253EC9800987F5B /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309281332253EC9800987F5B /* ImageLoader.swift */; };
+		309281342253EC9800987F5B /* WebImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309281332253EC9800987F5B /* WebImageView.swift */; };
 		30E0136922807C4B00715206 /* Swinject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E0136822807C4B00715206 /* Swinject.framework */; };
 /* End PBXBuildFile section */
 
@@ -80,7 +80,7 @@
 		3081F961226C99A900FB88D1 /* PhotosProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosProgressView.swift; sourceTree = "<group>"; };
 		308BADC02289BCE5005E4E9A /* VKApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKApi.swift; sourceTree = "<group>"; };
 		3092812F2253D81B00987F5B /* AlbumsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsVM.swift; sourceTree = "<group>"; };
-		309281332253EC9800987F5B /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		309281332253EC9800987F5B /* WebImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageView.swift; sourceTree = "<group>"; };
 		30E0136822807C4B00715206 /* Swinject.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swinject.framework; path = Carthage/Build/iOS/Swinject.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -213,7 +213,7 @@
 		309281392254CA7400987F5B /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				309281332253EC9800987F5B /* ImageLoader.swift */,
+				309281332253EC9800987F5B /* WebImageView.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -338,7 +338,7 @@
 				30481D04225005500087F242 /* AppDelegate.swift in Sources */,
 				30113707226B867700894D04 /* PhotosCell.swift in Sources */,
 				301136FD226B813700894D04 /* UICollectionView+Extension.swift in Sources */,
-				309281342253EC9800987F5B /* ImageLoader.swift in Sources */,
+				309281342253EC9800987F5B /* WebImageView.swift in Sources */,
 				3035785222833B9400B7C106 /* UserResponsable.swift in Sources */,
 				30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */,
 				309281302253D81B00987F5B /* AlbumsVM.swift in Sources */,

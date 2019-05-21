@@ -19,13 +19,16 @@ class VKApi {
 
     var user: UserResponse!
 
+    private var photosResponse: PhotosResponse!
+
     func getMe(completionHandler: @escaping (Result<UserResponse, VKApiError>) -> Void) {
-        VK.API.Users.get([.fields: "has_photo,photo50"])
+        VK.API.Users.get([.fields: "has_photo,photo_50"])
             .onSuccess { [weak self] data in
                 guard let self = self else { return }
 
                 do {
                     self.user = try self.decoder().decode([UserResponse].self, from: data).first
+                    print(self.user)
                     completionHandler(.success(self.user))
                 } catch {
                     completionHandler(.failure(.decoder(error)))
@@ -37,8 +40,18 @@ class VKApi {
             .send()
     }
 
-    func getAlbums(_ parameters: Parameters,
+    func getAlbums(_ perPage: Int,
+                   _ count: Int,
                    completionHandler: @escaping (Result<AlbumsResponse, VKApiError>) -> Void) {
+
+        let currentPage = count / perPage
+
+        let parameters: Parameters = [.ownerId: String(user.ownerId),
+                                      .needCovers: "1",
+                                      .photoSizes: "1",
+                                      .offset: String(currentPage * perPage),
+                                      .count: String(perPage)]
+
         VK.API.Photos.getAlbums(parameters)
             .onSuccess { [weak self] data in
                 guard let self = self else { return }
@@ -56,12 +69,12 @@ class VKApi {
             .send()
     }
 
-    var photosResponse: PhotosResponse!
-
     func getPhotos(_ album: AlbumsResponse.Album,
                    _ perPage: Int,
                    _ count: Int,
                    completionHandler: @escaping (Result<(PhotosResponse, [Int: UserResponse]), VKApiError>) -> Void) {
+
+        photosResponse = nil
 
         let currentPage = count / perPage
 
@@ -81,11 +94,9 @@ class VKApi {
                 var owners = Set<String>()
 
                 do {
-                    var response = try self.decoder().decode(PhotosResponse.self, from: data)
+                    let response = try self.decoder().decode(PhotosResponse.self, from: data)
 
-                    for (index, item) in response.items.enumerated() {
-                        response.items[index].setup()
-
+                    for item in response.items {
                         if let userId = item.userId, userId != 100 {
                             owners.insert(String(userId))
                         }

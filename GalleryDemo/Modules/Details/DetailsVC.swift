@@ -23,7 +23,7 @@ final class DetailsVC: UIViewController {
     @IBOutlet private var repostsLabel: UILabel!
     @IBOutlet private var commentsLabel: UILabel!
     @IBOutlet private var profileLabel: UILabel!
-    @IBOutlet private var avatarImageView: UIImageView!
+    @IBOutlet private var avatarImageView: WebImageView!
 
     var container: Container!
     var viewModel: PhotosVMProtocol!
@@ -42,6 +42,7 @@ final class DetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        configureShareButton()
         configureGestures()
         configureFields()
     }
@@ -64,9 +65,30 @@ final class DetailsVC: UIViewController {
         navigationController?.navigationBar.isHidden = false
     }
 
+    func configureShareButton() {
+        let button = UIBarButtonItem(barButtonSystemItem: .action,
+                                     target: self,
+                                     action: #selector(tapShareButton(_:)))
+        navigationItem.setRightBarButton(button, animated: true)
+    }
+
     func configureGestures() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toggleBars(_:)))
         view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func tapShareButton(_ sender: UIBarButtonItem) {
+        let photo = viewModel.photo(at: viewModel.indexPath.row)!
+
+        guard let imageURL = photo.imageURL else {
+            return
+        }
+
+        let activityController = UIActivityViewController(activityItems: [imageURL], applicationActivities: nil)
+        if let popoverController = activityController.popoverPresentationController {
+            popoverController.barButtonItem = sender
+        }
+        present(activityController, animated: true)
     }
 
     func updateIndexPath() {
@@ -90,13 +112,21 @@ final class DetailsVC: UIViewController {
         repostsLabel.text = String(photo.repostsCount)
         commentsLabel.text = String(photo.commentsCount)
 
+        var username: String?
+        var avatarURL: URL?
         if let userId = photo.userId, let user = viewModel.users[userId] {
-            profileLabel.text = user.name
+            username = user.name
+            avatarURL = user.avatarURL
         } else if let user = viewModel.users[photo.ownerId] {
-            profileLabel.text = user.name
+            username = user.name
+            avatarURL = user.avatarURL
         } else {
-            profileLabel.text = viewModel.album.title
+            username = viewModel.album.title
+            avatarURL = viewModel.album.thumbURL
         }
+
+        profileLabel.text = username
+        avatarImageView.setImage(url: avatarURL)
     }
 
     @objc func toggleBars(_ gesture: UITapGestureRecognizer) {
@@ -151,12 +181,6 @@ extension DetailsVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         configureFields()
-
-        guard let cell = cell as? DetailsCell else {
-            return
-        }
-
-        cell.didEndDisplaying()
     }
 }
 

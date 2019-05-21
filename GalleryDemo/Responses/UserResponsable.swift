@@ -12,15 +12,15 @@ struct UserResponse: Codable {
     var id: Int
     var firstName: String
     var lastName: String
-    var hasPhoto: Int
+    var photo50: String
 
+    var avatarURL: URL? {
+        return URL(string: photo50)
+    }
     var ownerId: Int {
         return -35486195 // id
     }
     var name: String {
         return "\(lastName) \(firstName)"
-    }
-    var isPhoto: Bool {
-        return hasPhoto == 1
     }
 }

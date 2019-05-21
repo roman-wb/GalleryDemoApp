@@ -32,26 +32,14 @@ final class AlbumsVM {
     var api: VKApi!
     weak var viewController: AlbumsVCProtocol!
 
-    var albums = [AlbumsResponse.Album]()
-
     var count: Int {
         return albums.count
     }
 
+    private var albums = [AlbumsResponse.Album]()
+
     private(set) var inProgress = false
     private(set) var isFinished = false
-
-    private var parameters: Parameters {
-        return [.ownerId: String(api.user.ownerId),
-                .needCovers: "1",
-                .photoSizes: "1",
-                .offset: String(currentPage * perPage),
-                .count: String(perPage)]
-    }
-
-    private var currentPage: Int {
-        return count / perPage
-    }
 }
 
 extension AlbumsVM: AlbumsVMProtocol {
@@ -86,7 +74,7 @@ extension AlbumsVM: AlbumsVMProtocol {
 
         inProgress = true
 
-        api.getAlbums(parameters) { [weak self] result in
+        api.getAlbums(perPage, count) { [weak self] result in
             switch result {
             case .success(let response):
                 self?.onSuccess(response)
@@ -109,8 +97,7 @@ extension AlbumsVM: AlbumsVMProtocol {
     }
 
     private func onSuccess(_ response: AlbumsResponse) {
-        for var album in response.items {
-            album.setup()
+        for album in response.items {
             albums.append(album)
         }
 

@@ -10,19 +10,19 @@ import UIKit
 
 class AlbumsProgressView: UIView {
 
-    @IBOutlet private var indicator: UIActivityIndicatorView!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var label: UILabel!
 
-    func showIndicator() {
-        indicator.startAnimating()
-        indicator.isHidden = false
+    func showActivityIndicator() {
+        activityIndicatorView.startAnimating()
+        activityIndicatorView.isHidden = false
         label.isHidden = true
     }
 
     func showLabel(text: String) {
         label.isHidden = false
         label.text = text
-        indicator.stopAnimating()
-        indicator.isHidden = true
+        activityIndicatorView.stopAnimating()
+        activityIndicatorView.isHidden = true
     }
 }
