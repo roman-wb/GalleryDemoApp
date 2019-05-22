@@ -21,29 +21,38 @@ final class DetailsCell: UICollectionViewCell {
         self.container = container
         self.photo = photo
 
-        imageView.setImage(url: photo.thumbURL) { [weak self] in
+        resetImageView()
+        imageView.setImage(url: photo.imageURL, style: .whiteLarge) { [weak self] in
             self?.updateZoom()
             self?.updateInsets()
         }
     }
 
-    func updateZoom() {
+    private func resetImageView() {
         scrollView.zoomScale = 1.0
-
-        guard let image = imageView.image else { return }
-
-        let widthRatio = (frame.width - 20) / image.size.width
-        let heightRatio = (frame.height - 20) / image.size.height
-        let scale = min(widthRatio, heightRatio)
-        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
-
-        imageView.frame = CGRect(origin: .zero, size: size)
-        scrollView.contentSize = size
+        scrollView.contentSize = frame.size
+        imageView.frame = bounds
+        updateInsets()
     }
 
-    func updateInsets() {
-        let offsetX = max((scrollView.frame.width - imageView.frame.width) / 2, 0)
-        let offsetY = max((scrollView.frame.height - imageView.frame.height) / 2, 0)
+    private func updateZoom() {
+        guard let image = imageView.image else { return }
+
+        let widthScale = (frame.width - 20) / image.size.width
+        let heightScale = (frame.height - 20) / image.size.height
+        let scale = min(widthScale, heightScale)
+
+        let newWidth = (image.size.width * scale).rounded(.down)
+        let newHeight = (image.size.height * scale).rounded(.down)
+        let size = CGSize(width: newWidth, height: newHeight)
+
+        scrollView.contentSize = size
+        imageView.frame = CGRect(origin: .zero, size: size)
+    }
+
+    private func updateInsets() {
+        let offsetX = max((frame.width - imageView.frame.width) / 2, 0)
+        let offsetY = max((frame.height - imageView.frame.height) / 2, 0)
 
         scrollView.alwaysBounceHorizontal = offsetX == 0
         scrollView.alwaysBounceVertical = offsetY == 0

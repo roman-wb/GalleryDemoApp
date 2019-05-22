@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 struct PhotosResponse: Codable {
     var count: Int
@@ -33,7 +34,15 @@ struct PhotosResponse: Codable {
         var reposts: Countable
         var comments: Countable
         var sizes: [Size]
+        var long: Double?
+        var lat: Double?
 
+        var data: Data?
+
+        var location: CLLocation? {
+            guard let latitude = lat, let longitude = long else { return nil }
+            return CLLocation(latitude: latitude, longitude: longitude)
+        }
         var thumbURL: URL? {
             return getImageURL(200)
         }

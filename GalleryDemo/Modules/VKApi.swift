@@ -28,7 +28,6 @@ class VKApi {
 
                 do {
                     self.user = try self.decoder().decode([UserResponse].self, from: data).first
-                    print(self.user)
                     completionHandler(.success(self.user))
                 } catch {
                     completionHandler(.failure(.decoder(error)))

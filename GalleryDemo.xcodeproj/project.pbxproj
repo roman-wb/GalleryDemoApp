@@ -24,8 +24,9 @@
 		302D33D6226A66D400593DD0 /* AlbumsProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */; };
 		302D33D8226A67E800593DD0 /* AlbumsProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */; };
 		302D33DA226A6CCF00593DD0 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */; };
+		302EB6052294007900D20826 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302EB6042294007900D20826 /* MapVC.swift */; };
+		302EB607229400A400D20826 /* MapVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 302EB606229400A400D20826 /* MapVC.storyboard */; };
 		3035785222833B9400B7C106 /* UserResponsable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3035785122833B9400B7C106 /* UserResponsable.swift */; };
-		3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */; };
 		303D0A752266FBAD0099CCA5 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */; };
 		30481D04225005500087F242 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30481D03225005500087F242 /* AppDelegate.swift */; };
 		30481D0B225005510087F242 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30481D0A225005510087F242 /* Assets.xcassets */; };
@@ -63,8 +64,9 @@
 		302D33D5226A66D400593DD0 /* AlbumsProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumsProgressView.xib; sourceTree = "<group>"; };
 		302D33D7226A67E800593DD0 /* AlbumsProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsProgressView.swift; sourceTree = "<group>"; };
 		302D33D9226A6CCF00593DD0 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		302EB6042294007900D20826 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
+		302EB606229400A400D20826 /* MapVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MapVC.storyboard; sourceTree = "<group>"; };
 		3035785122833B9400B7C106 /* UserResponsable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponsable.swift; sourceTree = "<group>"; };
-		3039BFAF225CF24100599185 /* Gallery.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gallery.xcdatamodel; sourceTree = "<group>"; };
 		303D0A742266FBAD0099CCA5 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30481D00225005500087F242 /* GalleryDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalleryDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30481D03225005500087F242 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -154,6 +156,15 @@
 			path = Albums;
 			sourceTree = "<group>";
 		};
+		302EB6032294002F00D20826 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				302EB606229400A400D20826 /* MapVC.storyboard */,
+				302EB6042294007900D20826 /* MapVC.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
 		30480B4022525DC9004D5993 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +173,7 @@
 				3012100222525921009451E5 /* Albums */,
 				301136FE226B85CC00894D04 /* Photos */,
 				307F78BA226D92EC00F3EDAA /* Details */,
+				302EB6032294002F00D20826 /* Map */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -192,7 +204,6 @@
 				30480B4022525DC9004D5993 /* Modules */,
 				30120FE32251F309009451E5 /* VKDelegate.swift */,
 				30481D03225005500087F242 /* AppDelegate.swift */,
-				3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */,
 				30481D0A225005510087F242 /* Assets.xcassets */,
 				30481D0C225005510087F242 /* LaunchScreen.storyboard */,
 				30481D0F225005510087F242 /* Info.plist */,
@@ -290,6 +301,7 @@
 				30113706226B867700894D04 /* PhotosVC.storyboard in Resources */,
 				30120FFC22523D98009451E5 /* LoginVC.storyboard in Resources */,
 				302D33D6226A66D400593DD0 /* AlbumsProgressView.xib in Resources */,
+				302EB607229400A400D20826 /* MapVC.storyboard in Resources */,
 				30120FFE225252A5009451E5 /* AlbumsVC.storyboard in Resources */,
 				307F78BF226D930B00F3EDAA /* DetailsVC.storyboard in Resources */,
 				30481D0E225005510087F242 /* LaunchScreen.storyboard in Resources */,
@@ -342,7 +354,7 @@
 				3035785222833B9400B7C106 /* UserResponsable.swift in Sources */,
 				30120FF022522409009451E5 /* UIViewController+Extension.swift in Sources */,
 				309281302253D81B00987F5B /* AlbumsVM.swift in Sources */,
-				3039BFB0225CF24100599185 /* Gallery.xcdatamodeld in Sources */,
+				302EB6052294007900D20826 /* MapVC.swift in Sources */,
 				30120FE42251F309009451E5 /* VKDelegate.swift in Sources */,
 				307B4F5822815E3300D99FA7 /* UINavigationController+Extension.swift in Sources */,
 				30113708226B867700894D04 /* PhotosVC.swift in Sources */,
@@ -551,19 +563,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		3039BFAE225CF24100599185 /* Gallery.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				3039BFAF225CF24100599185 /* Gallery.xcdatamodel */,
-			);
-			currentVersion = 3039BFAF225CF24100599185 /* Gallery.xcdatamodel */;
-			path = Gallery.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 30481CF8225005500087F242 /* Project object */;
 }

@@ -24,6 +24,8 @@ protocol PhotosVMProtocol {
     var inProgress: Bool { get }
     var isFinished: Bool { get }
 
+    func avatarURLBy(_ photo: PhotosResponse.Photo) -> URL?
+    func fullnameBy(_ photo: PhotosResponse.Photo) -> String
     func photo(at index: Int) -> PhotosResponse.Photo?
     func fetch(isRefresh: Bool)
     func fetchIfNeeded(at indexPath: IndexPath)
@@ -55,6 +57,27 @@ final class PhotosVM {
 }
 
 extension PhotosVM: PhotosVMProtocol {
+
+    func avatarURLBy(_ photo: PhotosResponse.Photo) -> URL? {
+        if let userId = photo.userId, let user = users[userId] {
+            return user.avatarURL
+        } else if let user = users[photo.ownerId] {
+            return user.avatarURL
+        } else {
+            return album.thumbURL
+        }
+    }
+
+    func fullnameBy(_ photo: PhotosResponse.Photo) -> String {
+        if let userId = photo.userId, let user = users[userId] {
+            return user.name
+        } else if let user = users[photo.ownerId] {
+            return user.name
+        } else {
+            return album.title
+        }
+    }
+
     func photo(at index: Int) -> PhotosResponse.Photo? {
         guard photos.indices.contains(index) else {
             return nil

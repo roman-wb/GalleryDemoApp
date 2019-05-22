@@ -8,6 +8,7 @@
 
 import UIKit
 import Swinject
+import SwiftyVK
 
 protocol DetailVCProtocol {
     var container: Container! { get set }
@@ -42,7 +43,6 @@ final class DetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureShareButton()
         configureGestures()
         configureFields()
     }
@@ -63,13 +63,20 @@ final class DetailsVC: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.isHidden = false
-    }
 
-    func configureShareButton() {
-        let button = UIBarButtonItem(barButtonSystemItem: .action,
-                                     target: self,
-                                     action: #selector(tapShareButton(_:)))
-        navigationItem.setRightBarButton(button, animated: true)
+        let shareVKButton = UIBarButtonItem(image: UIImage(named: "vk"),
+                                            style: .plain,
+                                            target: self,
+                                            action: #selector(tapShareVKButton(_:)))
+        let shareButton = UIBarButtonItem(image: UIImage(named: "share"),
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(tapShareButton(_:)))
+        let locationButton = UIBarButtonItem(image: UIImage(named: "map"),
+                                             style: .plain,
+                                             target: self,
+                                             action: #selector(tapLocationButton(_:)))
+        navigationItem.rightBarButtonItems = [locationButton, shareButton, shareVKButton]
     }
 
     func configureGestures() {
@@ -77,33 +84,62 @@ final class DetailsVC: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
 
-    @objc func tapShareButton(_ sender: UIBarButtonItem) {
-        let photo = viewModel.photo(at: viewModel.indexPath.row)!
+    @objc func tapShareVKButton(_ sender: UIBarButtonItem) {
+        guard
+            let photo = viewModel.photo(at: viewModel.indexPath.row),
+            let imageURL = photo.imageURL,
+            let image = WebImageView.cache.object(forKey: imageURL.relativeString as NSString),
+            let data = image.jpegData(compressionQuality: 1) else {
+                return
+        }
 
-        guard let imageURL = photo.imageURL else {
-            return
+        VK.sessions.default.share(
+            ShareContext(
+                text: viewModel.fullnameBy(photo),
+                images: [
+                    ShareImage(data: data, type: .jpg)
+                ]
+            ),
+            onSuccess: { print($0) },
+            onError: { print($0) }
+        )
+    }
+
+    @objc func tapShareButton(_ sender: UIBarButtonItem) {
+        guard
+            let photo = viewModel.photo(at: viewModel.indexPath.row),
+            let imageURL = photo.imageURL else {
+                return
         }
 
         let activityController = UIActivityViewController(activityItems: [imageURL], applicationActivities: nil)
         if let popoverController = activityController.popoverPresentationController {
-            popoverController.barButtonItem = sender
+            popoverController.sourceView = view
+            popoverController.sourceRect = CGRect(x: view.bounds.midX, y: 0, width: 0, height: 0)
         }
         present(activityController, animated: true)
     }
 
-    func updateIndexPath() {
-        if viewModel.indexPath == nil {
-            viewModel.indexPath = IndexPath(row: 0, section: 0)
+    @objc func tapLocationButton(_ sender: UIBarButtonItem) {
+        guard
+            let photo = viewModel.photo(at: viewModel.indexPath.row),
+            let imageURL = photo.imageURL,
+            let location = photo.location else {
+                return
         }
 
-        if let cell = collectionView.visibleCells.first, let currentIndexPath = collectionView.indexPath(for: cell) {
-            viewModel.indexPath = currentIndexPath
-        }
+        let mapVC = container.resolve(MapVC.self)!
+        mapVC.setup(fullName: viewModel.fullnameBy(photo),
+                    imageURL: imageURL,
+                    location: location)
+        navigationController?.pushViewController(mapVC, animated: true)
+    }
+
+    func updateIndexPath() {
+        viewModel.indexPath.row = Int(collectionView.contentOffset.x / collectionView.frame.width)
     }
 
     func configureFields() {
-        updateIndexPath()
-
         let photo = viewModel.photo(at: viewModel.indexPath.row)!
 
         navigationItem.title = "\(viewModel.currentIndex) of \(viewModel.total)"
@@ -111,21 +147,9 @@ final class DetailsVC: UIViewController {
         likesLabel.text = String(photo.likesCount)
         repostsLabel.text = String(photo.repostsCount)
         commentsLabel.text = String(photo.commentsCount)
+        profileLabel.text = viewModel.fullnameBy(photo)
 
-        var username: String?
-        var avatarURL: URL?
-        if let userId = photo.userId, let user = viewModel.users[userId] {
-            username = user.name
-            avatarURL = user.avatarURL
-        } else if let user = viewModel.users[photo.ownerId] {
-            username = user.name
-            avatarURL = user.avatarURL
-        } else {
-            username = viewModel.album.title
-            avatarURL = viewModel.album.thumbURL
-        }
-
-        profileLabel.text = username
+        let avatarURL = viewModel.avatarURLBy(photo)
         avatarImageView.setImage(url: avatarURL)
     }
 
@@ -142,6 +166,7 @@ final class DetailsVC: UIViewController {
         }
 
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+        configureFields()
     }
 
     func fetchCompleted() {
@@ -153,11 +178,10 @@ final class DetailsVC: UIViewController {
     func fetchFailed(with error: String) {
         //
     }
-}
 
-extension DetailsVC: DetailVCProtocol {
-    func setup(_ viewModel: PhotosVMProtocol) {
-        self.viewModel = viewModel
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateIndexPath()
+        configureFields()
     }
 }
 
@@ -169,18 +193,13 @@ extension DetailsVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        configureFields()
-
-        guard let cell = cell as? DetailsCell, let photo = viewModel.photo(at: indexPath.row) else {
-            return
+        guard
+            let cell = cell as? DetailsCell,
+            let photo = viewModel.photo(at: indexPath.row) else {
+                return
         }
 
         cell.configure(container: container, photo: photo)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
-                        forItemAt indexPath: IndexPath) {
-        configureFields()
     }
 }
 
@@ -191,7 +210,6 @@ extension DetailsVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
                         -> UICollectionViewCell {
-        configureFields()
         return collectionView.dequeueReusableCell(withReuseIdentifier: DetailsCell.identifier, for: indexPath)
     }
 }

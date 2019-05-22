@@ -18,7 +18,7 @@ struct UserResponse: Codable {
         return URL(string: photo50)
     }
     var ownerId: Int {
-        return -35486195 // id
+        return -41238925 //-35486195 // id
     }
     var name: String {
         return "\(lastName) \(firstName)"

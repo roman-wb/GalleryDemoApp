@@ -58,7 +58,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func showNavigationVC() {
-        window?.rootViewController = container.resolve(UINavigationController.self)
+        window?.rootViewController = container.resolve(UINavigationController.self)!
+//        window?.rootViewController = container.resolve(MapVC.self)!
     }
 }
 
@@ -121,6 +122,9 @@ extension AppDelegate {
             detailsVC.viewModel = photosVM
             return detailsVC
         }
+
+        // Map
+        container.register(MapVC.self) { _ in MapVC.storyboardInstance() }
 
         // VKApi
         container.register(VKApi.self) { _ in VKApi() }.inObjectScope(.container)

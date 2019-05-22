@@ -17,7 +17,6 @@ class WebImageView: UIImageView {
     private let indicatorView: UIActivityIndicatorView = {
         let indicatorView = UIActivityIndicatorView()
         indicatorView.hidesWhenStopped = true
-        indicatorView.style = .gray
         return indicatorView
     }()
 
@@ -30,42 +29,19 @@ class WebImageView: UIImageView {
         return self.url.relativeString as NSString
     }
 
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
 
-    private func setup() {
-        addSubview(indicatorView)
-        indicatorView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            indicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            indicatorView.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-    }
-
-    private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
-        guard error == nil else { return }
-        guard
-            let data = data,
-            let image = UIImage(data: data),
-            let resizedImage = image.resize(size) else {
-                return
-        }
-
-        WebImageView.cache.setObject(resizedImage, forKey: self.cacheKey())
-
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-
-            self.image = resizedImage
-            self.indicatorView.stopAnimating()
-            self.didChange?()
-        }
-    }
-
-    func setImage(url: URL?, didChange: (() -> Void)? = nil) {
+    func setImage(url: URL?, style: UIActivityIndicatorView.Style = .gray, didChange: (() -> Void)? = nil) {
         self.url = url
+        self.indicatorView.style = style
         self.didChange = didChange
 
         task?.cancel()
@@ -88,5 +64,34 @@ class WebImageView: UIImageView {
 
         task = URLSession.shared.dataTask(with: self.url, completionHandler: completionHandler)
         task?.resume()
+    }
+
+    private func setup() {
+        addSubview(indicatorView)
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            indicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            indicatorView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+
+    private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
+        guard error == nil else { return }
+        guard
+            let data = data,
+            let image = UIImage(data: data),
+            let resizedImage = image.resize(size) else {
+                return
+        }
+
+        WebImageView.cache.setObject(resizedImage, forKey: cacheKey())
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+
+            self.image = resizedImage
+            self.indicatorView.stopAnimating()
+            self.didChange?()
+        }
     }
 }
