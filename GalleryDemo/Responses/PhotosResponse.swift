@@ -29,7 +29,7 @@ struct PhotosResponse: Codable {
         var albumId: Int
         var ownerId: Int
         var userId: Int?
-        var date: Int
+        var date: Double
         var likes: Countable
         var reposts: Countable
         var comments: Countable

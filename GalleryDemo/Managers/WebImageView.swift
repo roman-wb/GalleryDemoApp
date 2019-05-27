@@ -78,6 +78,7 @@ class WebImageView: UIImageView {
     private func completionHandler(data: Data?, response: URLResponse?, error: Error?) {
         guard error == nil else { return }
         guard
+            let url = response?.url,
             let data = data,
             let image = UIImage(data: data),
             let resizedImage = image.resize(size) else {
@@ -88,6 +89,7 @@ class WebImageView: UIImageView {
 
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            guard url == self.url else { return }
 
             self.image = resizedImage
             self.indicatorView.stopAnimating()

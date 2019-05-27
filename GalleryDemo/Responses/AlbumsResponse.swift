@@ -26,7 +26,7 @@ struct AlbumsResponse: Codable {
         var sizes: [Size]
 
         var thumbURL: URL? {
-            return getImageURL(200)
+            return getImageURL(800)
         }
 
         private func getImageURL(_ width: Int) -> URL? {

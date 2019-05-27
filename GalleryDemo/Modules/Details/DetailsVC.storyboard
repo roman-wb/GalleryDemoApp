@@ -141,16 +141,27 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="fkh-dN-wfr">
-                                        <rect key="frame" x="350.5" y="10" width="55.5" height="40"/>
+                                        <rect key="frame" x="282.5" y="10" width="123.5" height="40"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXk-pl-JOK" userLabel="Name">
-                                                <rect key="frame" x="0.0" y="0.0" width="10.5" height="40"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aJ5-E6-Xk5" userLabel="Image" customClass="WebImageView" customModule="GalleryDemo" customModuleProvider="target">
-                                                <rect key="frame" x="15.5" y="0.0" width="40" height="40"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="6ha-4L-UoE">
+                                                <rect key="frame" x="0.0" y="0.0" width="78.5" height="40"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXk-pl-JOK" userLabel="Name">
+                                                        <rect key="frame" x="0.0" y="0.0" width="78.5" height="26.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" ambiguous="YES" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8gU-md-j1L">
+                                                        <rect key="frame" x="0.0" y="26.5" width="78.5" height="13.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aJ5-E6-Xk5" userLabel="Image" customClass="WebImageView" customModule="GalleryDemo" customModuleProvider="target">
+                                                <rect key="frame" x="83.5" y="0.0" width="40" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="aJ5-E6-Xk5" secondAttribute="height" multiplier="1:1" id="7dH-Uf-SgY"/>
                                                     <constraint firstAttribute="width" constant="40" id="NIp-fp-q3o"/>
@@ -168,6 +179,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="OsK-V6-uRL" firstAttribute="leading" secondItem="lhi-KE-koT" secondAttribute="leading" id="AYR-B9-Oiv"/>
+                                    <constraint firstItem="6ha-4L-UoE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="RbW-dj-ceY" secondAttribute="trailing" constant="10" id="Nfa-6d-C6D"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="fkh-dN-wfr" secondAttribute="trailing" id="Tbh-Qf-ngl" userLabel="___trailingMargin = Stack View.trailing"/>
                                     <constraint firstAttribute="bottom" secondItem="OsK-V6-uRL" secondAttribute="bottom" id="U3k-uo-fJa"/>
                                     <constraint firstItem="OsK-V6-uRL" firstAttribute="top" secondItem="lhi-KE-koT" secondAttribute="top" id="bTO-Kx-XBR"/>
@@ -196,6 +208,7 @@
                         <outlet property="bottomView" destination="lhi-KE-koT" id="dp6-jK-Wu2"/>
                         <outlet property="collectionView" destination="lcW-54-DZd" id="WBL-Ti-1Nq"/>
                         <outlet property="commentsLabel" destination="RbW-dj-ceY" id="VQp-qO-Br1"/>
+                        <outlet property="dateLabel" destination="8gU-md-j1L" id="1t6-qF-jl4"/>
                         <outlet property="likesLabel" destination="eai-Rb-cWJ" id="0cG-8o-eGT"/>
                         <outlet property="profileLabel" destination="hXk-pl-JOK" id="5Gh-JS-oZq"/>
                         <outlet property="repostsLabel" destination="OGc-xS-5UU" id="Xbb-xk-BVe"/>

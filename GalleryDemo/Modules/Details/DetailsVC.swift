@@ -24,7 +24,10 @@ final class DetailsVC: UIViewController {
     @IBOutlet private var repostsLabel: UILabel!
     @IBOutlet private var commentsLabel: UILabel!
     @IBOutlet private var profileLabel: UILabel!
+    @IBOutlet private var dateLabel: UILabel!
     @IBOutlet private var avatarImageView: WebImageView!
+
+    private var locationButton: UIBarButtonItem!
 
     var container: Container!
     var viewModel: PhotosVMProtocol!
@@ -72,10 +75,10 @@ final class DetailsVC: UIViewController {
                                           style: .plain,
                                           target: self,
                                           action: #selector(tapShareButton(_:)))
-        let locationButton = UIBarButtonItem(image: UIImage(named: "map"),
-                                             style: .plain,
-                                             target: self,
-                                             action: #selector(tapLocationButton(_:)))
+        locationButton = UIBarButtonItem(image: UIImage(named: "map"),
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(tapLocationButton(_:)))
         navigationItem.rightBarButtonItems = [locationButton, shareButton, shareVKButton]
     }
 
@@ -140,7 +143,7 @@ final class DetailsVC: UIViewController {
     }
 
     func configureFields() {
-        let photo = viewModel.photo(at: viewModel.indexPath.row)!
+        guard let photo = viewModel.photo(at: viewModel.indexPath.row) else { return }
 
         navigationItem.title = "\(viewModel.currentIndex) of \(viewModel.total)"
 
@@ -148,9 +151,14 @@ final class DetailsVC: UIViewController {
         repostsLabel.text = String(photo.repostsCount)
         commentsLabel.text = String(photo.commentsCount)
         profileLabel.text = viewModel.fullnameBy(photo)
+        avatarImageView.setImage(url: viewModel.avatarURLBy(photo))
 
-        let avatarURL = viewModel.avatarURLBy(photo)
-        avatarImageView.setImage(url: avatarURL)
+        locationButton.isEnabled = (photo.imageURL != nil && photo.location != nil)
+
+        let date = Date(timeIntervalSince1970: photo.date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateLabel.text = dateFormatter.string(from: date)
     }
 
     @objc func toggleBars(_ gesture: UITapGestureRecognizer) {
